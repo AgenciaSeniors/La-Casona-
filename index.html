@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Night Bar | Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modal.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+<header class="hero-casona">
+    <img src="fondo.png" class="hero-bg-cover" alt="Fondo La Casona">
+    <div class="dark-overlay"></div>
+
+    <div class="brand-group">
+        <img src="logo-verde.png" class="logo-unificado" alt="Logo">
+        <div class="brand-text">
+            <h1>La CASONA</h1>
+            <p>PUNTO DE VENTA</p>
+        </div>
+    </div>
+</header>
+    <div class="search-wrapper">
+        <div class="search-box">
+            <span class="search-icon">✦</span>
+            <input type="text" id="search-input" placeholder="Buscar cocteles, platos...">
+        </div>
+    </div>
+
+    <div class="filters-container">
+        <nav class="filters">
+    <button class="filter-btn active" onclick="filtrar('todos', this)">🏠 Todo</button>
+    <button class="filter-btn" onclick="filtrar('pizzas', this)">🍕 Pizzas</button>
+    <button class="filter-btn" onclick="filtrar('pastas', this)">🍝 Espaguetis</button>
+    <button class="filter-btn" onclick="filtrar('criolla', this)"> Completas</button>
+    <button class="filter-btn" onclick="filtrar('entrantes', this)">🍟 Entrantes</button>
+    <button class="filter-btn" onclick="filtrar('bebidas', this)">🍺 Bebidas</button>
+    <button class="filter-btn" onclick="filtrar('postres', this)">🍨 Postres</button>
+</nav>
+    </div>
+
+    <main class="container">
+        <h3 class="section-title">Nuestra Carta</h3>
+        <div id="menu-grid" class="menu-grid">
+            </div>
+    </main>
+
+    <footer>
+        <p>La Casona © 2025</p>
+        <a href="login.html" class="admin-link">🔒 Acceso Gerencial</a>
+    </footer>
+
+    <div id="modal-detalle" class="modal-overlay" onclick="if(event.target == this) cerrarDetalle()">
+    <div class="modal-card">
+        <div class="btn-close-modal" onclick="cerrarDetalle()">✕</div>
+        
+        <div class="modal-image-wrapper">
+            <img id="det-img" src="" alt="Producto">
+        </div>
+        
+        <div class="modal-body-content">
+            <h2 id="det-titulo" class="modal-title-elegant">Nombre Producto</h2>
+            <span id="det-precio" class="modal-price-tag">$0.00</span>
+            
+            <p id="det-desc" class="modal-description">Descripción del producto...</p>
+
+            <div id="box-curiosidad" class="ia-badge" style="display:none;">
+                <span class="ia-title">✨ Curiosidad del Chef</span>
+                <p id="det-curiosidad" class="ia-text">...</p>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <span style="color:#666; font-size:0.8rem;">Valoración:</span>
+                <span id="det-rating-big" style="color:#FFD700; font-size:1.1rem; font-weight:bold;">★ 5.0</span>
+            </div>
+
+            <button class="btn-modal-action" onclick="abrirOpinionDesdeDetalle()">
+                Dejar Opinión
+            </button>
+        </div>
+    </div>
+</div>
+
+    <div id="modal-opinion" class="modal" onclick="if(event.target == this) cerrarModalOpiniones()">
+        <div class="modal-content" style="padding: 30px; text-align: center;">
+            <span class="close-btn-float" style="top:10px; right:10px;" onclick="cerrarModalOpiniones()">×</span>
+            
+            <h3 style="color:var(--gold); margin-bottom:20px; font-family:'Playfair Display', serif;">
+                Calificar Experiencia
+            </h3>
+            
+            <div class="stars" id="stars-container" style="font-size:3rem; color:#444; cursor:pointer; margin-bottom:20px;">
+                <span data-val="1">★</span><span data-val="2">★</span><span data-val="3">★</span><span data-val="4">★</span><span data-val="5">★</span>
+            </div>
+            
+            <input type="text" id="cliente-nombre" placeholder="Tu nombre (Opcional)" class="input-stylish" style="width:100%; margin-bottom:10px;">
+            <textarea id="cliente-comentario" rows="3" placeholder="¿Qué te pareció?" class="input-stylish" style="width:100%; margin-bottom:20px;"></textarea>
+            
+            <button class="btn-big-action" id="btn-enviar-opinion" onclick="enviarOpinion()">ENVIAR</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
