@@ -640,7 +640,7 @@ body.admin-body {
     inset: 0;
     /* Degradado sutil para dar profundidad */
     background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(0.4px);
     -webkit-backdrop-filter: blur(2px);
     z-index: 1;
 }
@@ -702,7 +702,7 @@ body.admin-body {
 @media (max-width: 480px) {
     .brand-group {
         margin-top: 0px;
-        transform: translateY(21px); /* Baja todo el bloque un poco */
+        transform: translateY(35px); /* Baja todo el bloque un poco */
     }
     .logo-unificado {
         margin-bottom: -19%; /* En móvil lo pegamos un poco más */
