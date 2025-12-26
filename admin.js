@@ -31,7 +31,7 @@ async function cargarAdmin() {
         .from('productos')
         .select('*')
         .eq('activo', true)
-        .eq('ec2952c2-2cbe-44e8-afa4-3b7d16a5cf33', CONFIG.RESTAURANT_ID)
+        .eq('restaurant_id', CONFIG.RESTAURANT_ID)
         .order('id', { ascending: false });
 
     if (error) { 
@@ -176,7 +176,7 @@ if(form) {
                 descripcion, 
                 curiosidad, 
                 destacado
-                ec2952c2-2cbe-44e8-afa4-3b7d16a5cf33: CONFIG.RESTAURANT_ID
+               restaurant_id: CONFIG.RESTAURANT_ID
             };
 
             // Solo actualizamos imagen si subieron una nueva
@@ -241,6 +241,7 @@ async function eliminarProducto(id) {
 // Inicializar
 
 document.addEventListener('DOMContentLoaded', checkAuth);
+
 
 
 
