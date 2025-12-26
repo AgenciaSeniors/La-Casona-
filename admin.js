@@ -174,7 +174,6 @@ if(form) {
                 precio, 
                 categoria, 
                 descripcion, 
-                curiosidad, 
                 destacado
                restaurant_id: CONFIG.RESTAURANT_ID
             };
@@ -241,6 +240,7 @@ async function eliminarProducto(id) {
 // Inicializar
 
 document.addEventListener('DOMContentLoaded', checkAuth);
+
 
 
 
