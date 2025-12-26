@@ -69,11 +69,15 @@ body.admin-body {
 
 /* LOGIN */
 .login-wrapper {
-    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
-    background: url('https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?auto=format&fit=crop&w=1000&q=60') center/cover;
+    min-height: 100vh; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 20px;
+    background: #0a0a0a; /* Fondo negro liso como antes */
     position: relative;
 }
-.login-wrapper::before { content:''; position:absolute; inset:0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+/* Hemos eliminado el ::before que causaba el difuminado */
 
 .login-card {
     position: relative; z-index: 2;
@@ -894,4 +898,5 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+
 }
