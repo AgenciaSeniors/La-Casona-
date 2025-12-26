@@ -103,7 +103,7 @@ function prepararEdicion(id) {
     document.getElementById('precio').value = producto.precio;
     document.getElementById('categoria').value = producto.categoria;
     document.getElementById('descripcion').value = producto.descripcion || '';
-    document.getElementById('curiosidad').value = producto.curiosidad || '';
+
     document.getElementById('destacado').checked = producto.destacado;
 
     // Ajustar UI
@@ -240,3 +240,4 @@ async function eliminarProducto(id) {
 // Inicializar
 
 document.addEventListener('DOMContentLoaded', checkAuth);
+
