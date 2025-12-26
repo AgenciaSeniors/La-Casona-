@@ -67,7 +67,7 @@ function renderizarMenu(lista) {
         'agregados': { nombre: 'Agregados', icono: '🧀' },
         'spaguettis': { nombre: 'Spaguettis', icono: '🍝' },
         'bebidas': { nombre: 'Bebidas', icono: '🍺' },
-        'postre': { nombre: 'Postres', icono: '🍨' }
+        'postres': { nombre: 'Postres', icono: '🍨' }
     };
 
     Object.keys(categorias).forEach(catKey => {
@@ -353,5 +353,6 @@ renderizarMenu = (lista) => {
     setTimeout(activarScrollSpy, 800); 
 
 };
+
 
 
