@@ -91,49 +91,6 @@ async function cargarAdmin() {
     if (lista) lista.innerHTML = html;
 }
 
-// 3. GENERAR CURIOSIDAD CON IA (CORREGIDO)
-async function generarCuriosidad() {
-    const nombre = document.getElementById('nombre').value;
-    const campo = document.getElementById('curiosidad');
-    const loader = document.getElementById('loader-ia');
-    const btn = document.getElementById('btn-ia');
-
-    if (!nombre) { alert("Por favor escribe el nombre del producto primero."); return; }
-
-    btn.disabled = true; 
-    loader.style.display = "inline-block"; 
-    campo.value = "Generando...";
-
-    const API_KEY = CONFIG.GEMINI_KEY; 
-    // CORRECCIÓN: Usamos el modelo 'gemini-2.5-flash' que confirmamos que tienes disponible
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
-    
-    const prompt = `Escribe un dato curioso muy breve (máximo 20 palabras) y divertido sobre: "${nombre}". Tono gastronómico.`;
-
-    try {
-        const res = await fetch(URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        const data = await res.json();
-        
-        if (data.error) {
-            console.error("Error API:", data.error);
-            campo.value = "Error: " + data.error.message;
-        } else if (data.candidates && data.candidates[0].content) {
-            campo.value = data.candidates[0].content.parts[0].text;
-        } else {
-            campo.value = "No se pudo generar el dato.";
-        }
-    } catch (e) {
-        console.error(e);
-        campo.value = "Error de conexión.";
-    } finally {
-        loader.style.display = "none"; 
-        btn.disabled = false;
-    }
-}
 
 // 4. FUNCIONES DE EDICIÓN (NUEVAS)
 function prepararEdicion(id) {
@@ -281,4 +238,5 @@ async function eliminarProducto(id) {
 }
 
 // Inicializar
+
 document.addEventListener('DOMContentLoaded', checkAuth);
