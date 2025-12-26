@@ -141,7 +141,6 @@ if(form) {
             const precio = document.getElementById('precio').value;
             const categoria = document.getElementById('categoria').value;
             const descripcion = document.getElementById('descripcion').value;
-            const curiosidad = document.getElementById('curiosidad').value;
             const destacado = document.getElementById('destacado').checked;
             const fileInput = document.getElementById('imagen-file');
 
@@ -177,6 +176,7 @@ if(form) {
                 descripcion, 
                 curiosidad, 
                 destacado
+                ec2952c2-2cbe-44e8-afa4-3b7d16a5cf33: CONFIG.RESTAURANT_ID
             };
 
             // Solo actualizamos imagen si subieron una nueva
@@ -241,5 +241,6 @@ async function eliminarProducto(id) {
 // Inicializar
 
 document.addEventListener('DOMContentLoaded', checkAuth);
+
 
 
