@@ -152,13 +152,7 @@ function abrirDetalle(id) {
     const ratingBig = productoActual.ratingPromedio ? `★ ${productoActual.ratingPromedio}` : '★ --';
     setText('det-rating-big', ratingBig);
 
-    // Manejo de curiosidad
-    if (productoActual.curiosidad && productoActual.curiosidad.length > 5) {
-        if(box) box.style.display = "block";
-        setText('det-curiosidad', productoActual.curiosidad);
-    } else {
-        if(box) box.style.display = "none";
-    }
+  
     
     // ANIMACIÓN DE ENTRADA
     const modal = document.getElementById('modal-detalle');
@@ -356,4 +350,5 @@ renderizarMenu = (lista) => {
     originalRenderizarMenu(lista);
     // Esperamos un momento a que las imágenes carguen para calcular bien las posiciones
     setTimeout(activarScrollSpy, 800); 
+
 };
