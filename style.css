@@ -291,7 +291,7 @@ body.admin-body {
 /* --- ESTILO PORTADA: PARED + LOGO CENTRADO --- */
 /* --- ESTILO PORTADA: LUCES + TEXTO NEÓN --- */
 
-/* --- ESTILO TIPO "THE NIGHT BAR" (Texto Abajo Izquierda) --- */
+/* --- ESTILO TIPO "La Casona" (Texto Abajo Izquierda) --- */
 
 .hero-casona {
     position: relative;
@@ -640,7 +640,7 @@ body.admin-body {
     inset: 0;
     /* Degradado sutil para dar profundidad */
     background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
-    backdrop-filter: blur(0.4px);
+    backdrop-filter: blur(1.3px);
     -webkit-backdrop-filter: blur(2px);
     z-index: 1;
 }
@@ -707,4 +707,191 @@ body.admin-body {
     .logo-unificado {
         margin-bottom: -19%; /* En móvil lo pegamos un poco más */
     }
+}
+/* --- ESTILO PIE DE PÁGINA Y BOTÓN ADMIN --- */
+footer {
+    padding: 40px 20px;
+    text-align: center;
+    background: linear-gradient(to top, #000, #0a0a0a);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-branding p {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.agency-tag {
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.agency-link {
+    color: var(--gold); /* Usa el verde #2ECC71 */
+    text-decoration: none;
+    font-weight: 800;
+    transition: 0.3s;
+}
+
+.agency-link:hover {
+    text-shadow: 0 0 10px var(--gold-glow);
+}
+
+/* El Botón de Acceso Gerencial Estilo Premium */
+.admin-button-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    padding: 10px 20px;
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.admin-button-premium:hover {
+    background: var(--gold);
+    color: #000;
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+    transform: translateY(-2px);
+}
+
+.admin-button-premium .material-icons {
+    font-size: 1rem;
+}
+.filters-container {
+    position: sticky; /* Se queda fijo al subir */
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 10, 0.9);
+    backdrop-filter: blur(15px); /* Efecto cristal premium */
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+.filter-btn {
+    transition: all 0.4s ease; /* Cambio de color suave */
+}
+
+.filter-btn.active {
+    background: #2ECC71 !important; /* El verde de Agency Seniors */
+    color: #000 !important;
+    font-weight: 800;
+    transform: scale(1.05);
+}
+/* --- DISEÑO DE CATEGORÍAS HORIZONTALES LA CASONA --- */
+
+.category-section {
+    margin-bottom: 35px;
+}
+
+.category-title-casona {
+    color: #fff;
+    font-size: 1.4rem;
+    padding: 0 20px;
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif; /* Estilo elegante */
+    border-left: 4px solid #2ECC71; /* Detalle verde Casona */
+    margin-left: 10px;
+}
+
+/* Contenedor del Scroll */
+.horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 20px;
+    scroll-snap-type: x mandatory; /* Para que las cartas se "ajusten" al deslizar */
+    scrollbar-width: none; /* Oculta scroll en Firefox */
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+    display: none; /* Oculta scroll en Chrome/Safari */
+}
+
+/* Tarjeta Estilo Casona */
+.card-casona {
+    min-width: 170px;
+    max-width: 170px;
+    background: #1a1a1a;
+    border-radius: 18px;
+    overflow: hidden;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.card-casona:active {
+    transform: scale(0.95);
+}
+
+.card-img-container {
+    height: 130px;
+    position: relative;
+}
+
+.card-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tag-destacado {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #2ECC71;
+    color: #000;
+    font-size: 0.6rem;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.card-body {
+    padding: 12px;
+}
+
+.card-body h3 {
+    font-size: 0.95rem;
+    color: #fff;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-price {
+    color: #2ECC71; /* Verde Casona */
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.card-add {
+    background: #2ECC71;
+    color: #000;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

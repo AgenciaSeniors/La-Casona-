@@ -11,20 +11,23 @@ async function cargarMenu() {
     // Loader visible
     if (grid) grid.innerHTML = '<p style="text-align:center; color:#888; grid-column:1/-1; padding:40px;">Cargando carta...</p>';
 
-    try {
+try {
         if (typeof supabaseClient === 'undefined') {
             throw new Error("Error: Supabase no está conectado.");
         }
 
         // Cargar productos
         let { data: productos, error } = await supabaseClient
+        
             .from('productos')
             .select(`*, opiniones(puntuacion)`)
             .eq('activo', true)
+            .order('categoria', { ascending: true })
             .order('destacado', { ascending: false })
             .order('id', { ascending: false });
 
         if (error) throw error;
+
 
         // Calcular ratings
         todosLosProductos = productos.map(prod => {
@@ -53,50 +56,84 @@ function renderizarMenu(lista) {
     const contenedor = document.getElementById('menu-grid');
     if (!contenedor) return;
     
+    contenedor.style.display = 'block'; 
     contenedor.innerHTML = '';
 
-    if (!lista || lista.length === 0) {
-        contenedor.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:#666;"><h4>Carta Vacía</h4></div>';
-        return;
-    }
+    const categorias = {
+        'entrantes': { nombre: 'Entrantes', icono: '🍟' },
+        'completas': { nombre: 'Completas', icono: '🍛' },
+        'pizzas': { nombre: 'Pizzas', icono: '🍕' },
+        'agregados': { nombre: 'Agregados', icono: '🧀' },
+        'spaguettis': { nombre: 'Spaguettis', icono: '🍝' },
+        'bebidas': { nombre: 'Bebidas', icono: '🍺' },
+        'postre': { nombre: 'Postres', icono: '🍨' }
+    };
 
-    const html = lista.map(item => {
-        // Lógica Agotado
-        const esAgotado = item.estado === 'agotado';
-        const claseAgotado = esAgotado ? 'agotado' : '';
+    Object.keys(categorias).forEach(catKey => {
+        const productosCategoria = lista.filter(p => p.categoria === catKey);
         
-        // Si está agotado mostramos cartel ROJO, si es destacado mostramos corona
-        let badgeHTML = '';
-        if (esAgotado) {
-            badgeHTML = `<span class="badge-agotado">AGOTADO</span>`;
-        } else if (item.destacado) {
-            badgeHTML = `<span class="badge-destacado">👑 TOP</span>`;
-        }
-
-        const img = item.imagen_url || 'https://via.placeholder.com/300';
-        const rating = item.ratingPromedio ? `★ ${item.ratingPromedio}` : '';
-        
-        // Nota: Si está agotado, quitamos el onclick para que no abran el detalle
-        const accionClick = esAgotado ? '' : `onclick="abrirDetalle(${item.id})"`;
-
-        return `
-            <div class="card ${claseAgotado}" ${accionClick}>
-                ${badgeHTML}
-                <div class="img-box"><img src="${img}" loading="lazy" alt="${item.nombre}"></div>
-                <div class="info">
-                    <h3>${item.nombre}</h3>
-                    <p class="short-desc">${item.descripcion || ''}</p>
-                    <div class="card-footer">
-                         <span class="price">$${item.precio}</span>
-                         <span class="rating-pill">${rating}</span>
+        if (productosCategoria.length > 0) {
+            const catInfo = categorias[catKey];
+            
+            // Añadimos un ID único a cada sección para el Scroll Spy
+            const seccionHTML = `
+                <div class="category-section" id="section-${catKey}" data-categoria="${catKey}">
+                    <h2 class="category-title-casona">
+                        ${catInfo.icono} ${catInfo.nombre}
+                    </h2>
+                    <div class="horizontal-scroll">
+                        ${productosCategoria.map(item => `
+                            <div class="card-casona" onclick="abrirDetalle(${item.id})">
+                                <div class="card-img-container">
+                                    <img src="${item.imagen_url || 'https://via.placeholder.com/300'}" loading="lazy">
+                                    ${item.destacado ? '<span class="tag-destacado">TOP</span>' : ''}
+                                </div>
+                                <div class="card-body">
+                                    <h3>${item.nombre}</h3>
+                                    <div class="card-footer">
+                                        <span class="card-price">$${item.precio}</span>
+                                        </div>
+                                </div>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
-            </div>
-        `;
-    }).join('');
+            `;
+            contenedor.innerHTML += seccionHTML;
+        }
+    });
 
-    contenedor.innerHTML = html;
+    // Reiniciamos el observador de scroll después de renderizar
+    setTimeout(activarScrollSpyCategorias, 500);
 }
+
+// Nueva función de Scroll Spy para Secciones
+const activarScrollSpyCategorias = () => {
+    const sections = document.querySelectorAll('.category-section');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const catKey = entry.target.getAttribute('data-categoria');
+                
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    // Comprobamos si el onclick del botón coincide con la categoría
+                    if (btn.getAttribute('onclick').includes(`'${catKey}'`)) {
+                        btn.classList.add('active');
+                        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    }
+                });
+            }
+        });
+    }, { 
+        rootMargin: '-20% 0px -70% 0px', // Detecta la sección cuando entra en la parte superior
+        threshold: 0 
+    });
+
+    sections.forEach(section => observer.observe(section));
+};
 
 // 3. DETALLE
 function abrirDetalle(id) {
@@ -279,3 +316,44 @@ function showToast(mensaje, tipo = 'success') {
         setTimeout(() => toast.remove(), 400); // Esperar a que termine la animación
     }, 4000);
 }
+// Función para detectar la categoría en pantalla y marcar el botón
+const activarScrollSpy = () => {
+    const cards = document.querySelectorAll('.card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Buscamos el ID del producto en el atributo onclick de la card
+                const onclickAttr = entry.target.getAttribute('onclick');
+                if (!onclickAttr) return;
+                
+                const idMatch = onclickAttr.match(/\d+/);
+                if (idMatch) {
+                    const producto = todosLosProductos.find(p => p.id == idMatch[0]);
+                    if (producto) {
+                        buttons.forEach(btn => {
+                            btn.classList.remove('active');
+                            // Si el botón tiene la función filtrar con la categoría del producto, se activa
+                            if (btn.getAttribute('onclick').includes(`'${producto.categoria}'`)) {
+                                btn.classList.add('active');
+                                // Desplazamiento automático del menú de filtros para que el botón sea visible
+                                btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }, { threshold: 0.6 }); // Se activa cuando el 60% del plato es visible
+
+    cards.forEach(card => observer.observe(card));
+};
+
+// Modificamos ligeramente la función renderizarMenu para que active el observador
+const originalRenderizarMenu = renderizarMenu;
+renderizarMenu = (lista) => {
+    originalRenderizarMenu(lista);
+    // Esperamos un momento a que las imágenes carguen para calcular bien las posiciones
+    setTimeout(activarScrollSpy, 800); 
+};

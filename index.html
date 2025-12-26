@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Night Bar | Experience</title>
+    <title>La Casona | Experience</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="modal.css">
@@ -28,19 +28,20 @@
     <div class="search-wrapper">
         <div class="search-box">
             <span class="search-icon">✦</span>
-            <input type="text" id="search-input" placeholder="Buscar cocteles, platos...">
+            <input type="text" id="search-input" placeholder="Buscar pizzas, completas...">
         </div>
     </div>
 
     <div class="filters-container">
       <nav class="filters">
-    <button class="filter-btn active" onclick="filtrar('todos', this)">🏠 Todo</button>
     <button class="filter-btn" onclick="filtrar('entrantes', this)">🍟 Entrantes</button>
     <button class="filter-btn" onclick="filtrar('completas', this)">🍛 Completas</button>
     <button class="filter-btn" onclick="filtrar('pizzas', this)">🍕 Pizzas</button>
     <button class="filter-btn" onclick="filtrar('spaguettis', this)">🍝 Spaguettis</button>
     <button class="filter-btn" onclick="filtrar('bebidas', this)">🍺 Bebidas</button>
     <button class="filter-btn" onclick="filtrar('postres', this)">🍨 Postres</button>
+     <button class="filter-btn" onclick="filtrar('agregos', this)">🧀 Agregados</button>
+</nav>
 </nav>
     </div>
 
@@ -51,8 +52,18 @@
     </main>
 
     <footer>
+    
+    <div class="footer-branding">
         <p>La Casona © 2025</p>
-        <a href="login.html" class="admin-link">🔒 Acceso Gerencial</a>
+        <p class="agency-tag">Digital Experience by 
+            <a href="https://agenciaseniors.com" target="_blank" class="agency-link">AGENCY SENIORS</a>
+        </p>
+    </div>
+    
+    <a href="login.html" class="admin-button-premium">
+        <span class="material-icons"></span> Acceso Gerencial
+    </a>
+
     </footer>
 
     <div id="modal-detalle" class="modal-overlay" onclick="if(event.target == this) cerrarDetalle()">
