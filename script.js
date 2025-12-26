@@ -22,6 +22,7 @@ try {
             .from('productos')
             .select(`*, opiniones(puntuacion)`)
             .eq('activo', true)
+            .eq('ec2952c2-2cbe-44e8-afa4-3b7d16a5cf33', CONFIG.RESTAURANT_ID)
             .order('categoria', { ascending: true })
             .order('destacado', { ascending: false })
             .order('id', { ascending: false });
@@ -352,3 +353,4 @@ renderizarMenu = (lista) => {
     setTimeout(activarScrollSpy, 800); 
 
 };
+
