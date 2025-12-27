@@ -147,7 +147,7 @@ if(form) {
                 categoria, 
                 descripcion, 
                 destacado,
-                [cite_start]restaurant_id: CONFIG.RESTAURANT_ID // Vinculación obligatoria [cite: 91, 151-153]
+             restaurant_id: CONFIG.RESTAURANT_ID // Vinculación obligatoria [cite: 91, 151-153]
             };
 
             if (urlImagen) datos.imagen_url = urlImagen;
@@ -400,6 +400,7 @@ async function eliminarProducto(id) {
 // Inicializar
 
 document.addEventListener('DOMContentLoaded', checkAuth);
+
 
 
 
