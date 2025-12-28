@@ -156,3 +156,86 @@ async function eliminarProducto(id) {
 }
 
 document.addEventListener('DOMContentLoaded', checkAuth);
+// ==========================================
+// LÓGICA DE VISTA PREVIA DE IMAGEN Y CANCELAR
+// ==========================================
+
+// 1. Función Global para el botón "Cancelar"
+window.cancelarEdicion = function() {
+    const form = document.getElementById('form-producto');
+    const btnSubmit = document.getElementById('btn-submit');
+    const btnCancelar = document.getElementById('btn-cancelar');
+    const editIdInput = document.getElementById('edit-id');
+
+    form.reset(); // Limpia los inputs de texto
+    editIdInput.value = ''; // Resetea el ID de edición
+    btnSubmit.textContent = 'GUARDAR PRODUCTO';
+    btnCancelar.style.display = 'none';
+    editandoId = null;
+
+    resetearVistaPrevia(); // Limpia la imagen
+}
+
+// Función auxiliar para volver al estado inicial de "Toca para subir"
+function resetearVistaPrevia() {
+    const fileInput = document.getElementById('imagen-file');
+    const preview = document.getElementById('imagen-preview');
+    const prompt = document.getElementById('upload-prompt');
+
+    if (fileInput) fileInput.value = ''; // Limpia el input file
+    if (preview) {
+        preview.src = '';
+        preview.style.display = 'none'; // Oculta la imagen
+    }
+    if (prompt) prompt.style.display = 'block'; // Muestra el texto y el icono
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Referencias a los nuevos elementos
+    const fileInput = document.getElementById('imagen-file');
+    const preview = document.getElementById('imagen-preview');
+    const prompt = document.getElementById('upload-prompt');
+
+    // 2. Listener para mostrar vista previa al seleccionar archivo local
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.src = event.target.result; // Asigna la imagen leída
+                    preview.style.display = 'block';   // Muestra la etiqueta img
+                    prompt.style.display = 'none';     // Oculta el texto de ayuda
+                }
+                reader.readAsDataURL(file); // Lee el archivo como URL
+            } else {
+                // Si el usuario cancela la selección de archivo
+                 if (!editandoId) resetearVistaPrevia();
+            }
+        });
+    }
+
+    // 3. Modificar el listener de EDITAR para mostrar la imagen existente
+    // Busca en tu código actual donde dice: if (e.target.closest('.btn-edit')) { ...
+    // Y añade estas líneas justo después de llenar el formulario:
+    const originalEditHandler = document.addEventListener('click', async (e) => {
+        const btnEdit = e.target.closest('.btn-edit');
+        if (btnEdit) {
+             // ... (tu código que obtiene el producto y llena los inputs) ...
+            const id = btnEdit.dataset.id;
+            const prod = todosLosProductos.find(p => p.id == id);
+             
+            if (prod) {
+                // Lógica añadida para la vista previa al editar
+                if (prod.imagen_url) {
+                    preview.src = prod.imagen_url;
+                    preview.style.display = 'block';
+                    prompt.style.display = 'none';
+                } else {
+                    resetearVistaPrevia();
+                }
+            }
+        }
+    });
+});
