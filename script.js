@@ -88,6 +88,7 @@ function renderizarMenu(lista) {
             contenedor.innerHTML += seccionHTML;
         }
     });
+    activarVigilanciaCategorias();
 }
 
 // 3. DETALLE
@@ -171,6 +172,43 @@ function irAlInicio(btn) {
     filtrar('todos', btn);
 }
 document.addEventListener('DOMContentLoaded', cargarMenu);
+// --- SISTEMA DE ILUMINACIÓN AUTOMÁTICA DE CATEGORÍAS ---
+
+const opcionesScroll = {
+    // Detectamos cuando la sección está a 150px del tope (ajuste para el menú fijo)
+    rootMargin: '-150px 0px -70% 0px', 
+    threshold: 0
+};
+
+const observadorScroll = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            // Obtenemos la categoría desde el atributo data-categoria que ya tienes
+            const categoriaActiva = entry.target.getAttribute('data-categoria');
+            actualizarBotonActivo(categoriaActiva);
+        }
+    });
+}, opcionesScroll);
+
+function actualizarBotonActivo(cat) {
+    const botones = document.querySelectorAll('.filter-btn');
+    botones.forEach(btn => {
+        btn.classList.remove('active');
+        // Si el botón tiene la función filtrar con esa categoría, lo alumbramos
+        if (btn.getAttribute('onclick').includes(`'${cat}'`)) {
+            btn.classList.add('active'); //
+            
+            // Opcional: Hace que el menú de botones se mueva solo si el botón queda oculto
+            btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+    });
+}
+
+// Función para empezar a vigilar las secciones
+function activarVigilanciaCategorias() {
+    const secciones = document.querySelectorAll('.category-section');
+    secciones.forEach(sec => observadorScroll.observe(sec));
+}
 
 
 
