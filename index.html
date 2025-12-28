@@ -89,8 +89,12 @@
             
             <p id="det-desc" class="modal-description">Descripción del producto...</p>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <span style="color:#666; font-size:0.8rem;">Valoración:</span>
-                <span id="det-rating-big" style="color:#FFD700; font-size:1.1rem; font-weight:bold;">★ 5.0</span>
+               <div class="valoracion-clicable" onclick="abrirListaOpiniones()" style="cursor:pointer; display:flex; align-items:center; gap:10px; margin-top:15px;">
+    <span style="color: #888; font-size: 0.9rem;">Valoración:</span>
+    <div style="color: #f1c40f; font-weight: 800; font-size: 1.1rem;">
+        <span id="det-estrellas-icon">★</span> 
+        <span id="det-puntuacion-valor">0.0</span> </div>
+</div>
             </div>
 
             <button class="btn-modal-action" onclick="abrirOpinionDesdeDetalle()">
@@ -118,11 +122,23 @@
             <button class="btn-big-action" id="btn-enviar-opinion" onclick="enviarOpinion()">ENVIAR</button>
         </div>
     </div>
-
+<div id="modal-lista-opiniones" class="modal-overlay" style="display:none; z-index: 2100;" onclick="if(event.target == this) cerrarListaOpiniones()">
+    <div class="modal-card" style="max-height: 70vh; display: flex; flex-direction: column;">
+        <div class="btn-close-modal" onclick="cerrarListaOpiniones()">✕</div>
+        
+        <h3 style="color:white; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px; font-family: 'Playfair Display', serif;">
+            Opiniones de clientes
+        </h3>
+        
+        <div id="contenedor-opiniones-full" style="overflow-y: auto; flex: 1; padding-right: 5px;">
+            </div>
+    </div>
+</div>
     <script src="script.js"></script>
 </body>
 
 </html>
+
 
 
 
