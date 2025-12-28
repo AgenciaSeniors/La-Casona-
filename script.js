@@ -172,6 +172,31 @@ function irAlInicio(btn) {
     filtrar('todos', btn);
 }
 document.addEventListener('DOMContentLoaded', cargarMenu);
+// --- LÓGICA DEL BUSCADOR ---
+document.addEventListener('input', (e) => {
+    // Verificamos que el cambio sea en el input de búsqueda
+    if (e.target.id === 'search-input') {
+        // Limpiamos el timeout anterior para no filtrar en cada letra (Debounce)
+        clearTimeout(searchTimeout);
+        
+        searchTimeout = setTimeout(() => {
+            const busqueda = e.target.value.toLowerCase().trim();
+
+            if (busqueda === "") {
+                // Si borra todo, mostramos el menú original completo
+                renderizarMenu(todosLosProductos);
+            } else {
+                // Filtramos sobre el array global que cargaste en cargarMenu()
+                const filtrados = todosLosProductos.filter(p => 
+                    p.nombre.toLowerCase().includes(busqueda) || 
+                    (p.descripcion && p.descripcion.toLowerCase().includes(busqueda))
+                );
+                // Dibujamos solo los resultados encontrados
+                renderizarMenu(filtrados);
+            }
+        }, 300); // Espera 300ms después de que el usuario deja de escribir
+    }
+});
 // --- SISTEMA DE ILUMINACIÓN AUTOMÁTICA DE CATEGORÍAS ---
 
 const opcionesScroll = {
@@ -209,6 +234,7 @@ function activarVigilanciaCategorias() {
     const secciones = document.querySelectorAll('.category-section');
     secciones.forEach(sec => observadorScroll.observe(sec));
 }
+
 
 
 
