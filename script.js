@@ -49,7 +49,14 @@ function renderizarMenu(lista) {
     
     contenedor.style.display = 'block'; 
     contenedor.innerHTML = '';
-
+if (lista.length === 0) {
+    contenedor.innerHTML = `
+        <div style="text-align:center; grid-column:1/-1; padding:40px; color:#888;">
+            <span class="material-icons" style="font-size:3rem; display:block; margin-bottom:10px;">search_off</span>
+            No se encontraron productos para tu búsqueda.
+        </div>`;
+    return;
+}
     const categorias = {
         'entrantes': { nombre: 'Entrantes', icono: '🍟' },
         'completas': { nombre: 'Completas', icono: '🍛' },
@@ -234,6 +241,7 @@ function activarVigilanciaCategorias() {
     const secciones = document.querySelectorAll('.category-section');
     secciones.forEach(sec => observadorScroll.observe(sec));
 }
+
 
 
 
