@@ -125,52 +125,33 @@ function cerrarDetalle() {
     }
 }
 
-// 4. FILTROS Y BÚSQUEDA
 function filtrar(cat, btn) {
+    // 1. Manejo visual de los botones (quitar activo de otros, poner en este)
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
-    const lista = cat === 'todos' ? todosLosProductos : todosLosProductos.filter(p => p.categoria === cat);
-    renderizarMenu(lista);
-}
 
-document.addEventListener('DOMContentLoaded', cargarMenu);
-// --- LÓGICA DEL BUSCADOR ---
-
-// Función que realiza el filtrado
-function buscarProductos(termino) {
-    const busqueda = termino.toLowerCase().trim();
-
-    // Si no hay nada escrito, mostramos todo
-    if (busqueda === "") {
-        renderizarMenu(todosLosProductos);
+    // 2. Si es 'todos' o 'inicio', subimos al tope
+    if (cat === 'todos') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
     }
 
-    // Filtramos el array global por nombre o descripción
-    const filtrados = todosLosProductos.filter(p => {
-        const nombre = p.nombre ? p.nombre.toLowerCase() : "";
-        const descripcion = p.descripcion ? p.descripcion.toLowerCase() : "";
-        return nombre.includes(busqueda) || descripcion.includes(busqueda);
-    });
+    // 3. Buscamos la sección por su ID (ej: section-pizzas)
+    const seccion = document.getElementById(`section-${cat}`);
 
-    renderizarMenu(filtrados);
-}
+    if (seccion) {
+        // Calculamos la posición restando un margen (offset) 
+        // para que la barra de filtros sticky no tape el título
+        const headerOffset = 120; // Ajusta este valor según el alto de tu cabecera
+        const elementPosition = seccion.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-// Evento que detecta la escritura en el input
-document.addEventListener('DOMContentLoaded', () => {
-    const inputBusqueda = document.getElementById('search-input');
-    
-    if (inputBusqueda) {
-        inputBusqueda.addEventListener('input', (e) => {
-            // Limpiamos el timeout anterior para esperar a que el usuario termine de escribir
-            clearTimeout(searchTimeout);
-            
-            searchTimeout = setTimeout(() => {
-                buscarProductos(e.target.value);
-            }, 300); // 300ms de espera
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
         });
     }
-});
+}
 // Función para el botón Inicio
 function irAlInicio(btn) {
     // 1. Sube la pantalla al inicio suavemente
@@ -184,6 +165,7 @@ function irAlInicio(btn) {
     filtrar('todos', btn);
 }
 document.addEventListener('DOMContentLoaded', cargarMenu);
+
 
 
 
