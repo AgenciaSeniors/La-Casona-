@@ -52,7 +52,7 @@ function renderizarMenu(lista) {
 if (lista.length === 0) {
     contenedor.innerHTML = `
         <div style="text-align:center; grid-column:1/-1; padding:40px; color:#888;">
-            <span class="material-icons" style="font-size:3rem; display:block; margin-bottom:10px;">search_off</span>
+            <span class="material-icons" style="font-size:3rem; display:block; margin-bottom:10px;"></span>
             No se encontraron productos para tu búsqueda.
         </div>`;
     return;
@@ -241,6 +241,7 @@ function activarVigilanciaCategorias() {
     const secciones = document.querySelectorAll('.category-section');
     secciones.forEach(sec => observadorScroll.observe(sec));
 }
+
 
 
 
