@@ -1,6 +1,6 @@
 let inventarioGlobal = []; 
 
-// 1. SEGURIDAD
+// 1. SEGURIDAD Y CARGA INICIAL
 async function checkAuth() {
     if (typeof supabaseClient === 'undefined') return;
     const { data: { session } } = await supabaseClient.auth.getSession();
@@ -16,7 +16,7 @@ async function cerrarSesion() {
     window.location.href = "login.html";
 }
 
-// 2. CARGAR INVENTARIO
+// 2. CARGAR INVENTARIO EN EL PANEL
 async function cargarAdmin() {
     const lista = document.getElementById('lista-admin');
     if (!lista) return;
@@ -44,7 +44,7 @@ async function cargarAdmin() {
 
     lista.innerHTML = inventarioGlobal.map(item => {
         const esAgotado = item.estado === 'agotado';
-        const favColor = item.destacado ? '#F1C40F' : '#444';
+        const favColor = item.destacado ? '#2ECC71' : '#444';
         
         return `
             <div class="inventory-item">
@@ -65,7 +65,7 @@ async function cargarAdmin() {
     }).join('');
 }
 
-// 3. GESTIÓN DE PRODUCTOS
+// 3. GESTIÓN DE FORMULARIO (GUARDAR / ACTUALIZAR)
 const form = document.getElementById('form-producto');
 if(form) {
     form.addEventListener('submit', async (e) => {
@@ -80,10 +80,17 @@ if(form) {
             const fileInput = document.getElementById('imagen-file');
             let urlImagen = null;
 
+            // Subida de imagen a Supabase Storage
             if (fileInput.files.length > 0) {
                 const archivo = fileInput.files[0];
                 const nombreArchivo = `prod_${Date.now()}.${archivo.name.split('.').pop()}`;
-                await supabaseClient.storage.from('imagenes').upload(nombreArchivo, archivo);
+                
+                const { error: uploadError } = await supabaseClient.storage
+                    .from('imagenes') // Asegúrate que el bucket se llame 'imagenes' en minúsculas
+                    .upload(nombreArchivo, archivo);
+                
+                if (uploadError) throw uploadError;
+
                 const { data } = supabaseClient.storage.from('imagenes').getPublicUrl(nombreArchivo);
                 urlImagen = data.publicUrl;
             }
@@ -117,27 +124,71 @@ if(form) {
     });
 }
 
+// 4. FUNCIONES DE EDICIÓN Y VISTA PREVIA
 function prepararEdicion(id) {
     const p = inventarioGlobal.find(p => p.id === id);
     if (!p) return;
+
     document.getElementById('edit-id').value = p.id;
     document.getElementById('nombre').value = p.nombre;
     document.getElementById('precio').value = p.precio;
     document.getElementById('categoria').value = p.categoria;
     document.getElementById('descripcion').value = p.descripcion || '';
     document.getElementById('destacado').checked = p.destacado;
+
+    // Mostrar vista previa de la foto actual
+    const preview = document.getElementById('imagen-preview');
+    const prompt = document.getElementById('upload-prompt');
+    if (p.imagen_url) {
+        preview.src = p.imagen_url;
+        preview.style.display = 'block';
+        prompt.style.display = 'none';
+    }
+
     document.getElementById('btn-submit').textContent = "ACTUALIZAR PRODUCTO";
     document.getElementById('btn-cancelar').style.display = "block";
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function cancelarEdicion() {
-    form.reset();
+    if(form) form.reset();
     document.getElementById('edit-id').value = "";
     document.getElementById('btn-submit').textContent = "GUARDAR PRODUCTO";
     document.getElementById('btn-cancelar').style.display = "none";
+
+    // Limpiar vista previa de imagen
+    const preview = document.getElementById('imagen-preview');
+    const prompt = document.getElementById('upload-prompt');
+    const fileInput = document.getElementById('imagen-file');
+    
+    if (fileInput) fileInput.value = '';
+    if (preview) {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+    if (prompt) prompt.style.display = 'block';
 }
 
+// 5. LÓGICA DE VISTA PREVIA AL SELECCIONAR ARCHIVO
+document.addEventListener('change', (e) => {
+    if (e.target.id === 'imagen-file') {
+        const file = e.target.files[0];
+        const preview = document.getElementById('imagen-preview');
+        const prompt = document.getElementById('upload-prompt');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                prompt.style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+});
+
+// 6. ACCIONES RÁPIDAS (DESTACAR, AGOTAR, ELIMINAR)
 async function toggleDestacado(id, valor) {
     await supabaseClient.from('productos').update({ destacado: !valor }).eq('id', id);
     cargarAdmin();
@@ -145,97 +196,3 @@ async function toggleDestacado(id, valor) {
 
 async function toggleEstado(id, est) {
     await supabaseClient.from('productos').update({ estado: est === 'disponible' ? 'agotado' : 'disponible' }).eq('id', id);
-    cargarAdmin();
-}
-
-async function eliminarProducto(id) {
-    if(confirm("¿Eliminar producto?")) {
-        await supabaseClient.from('productos').update({ activo: false }).eq('id', id);
-        cargarAdmin();
-    }
-}
-
-document.addEventListener('DOMContentLoaded', checkAuth);
-// ==========================================
-// LÓGICA DE VISTA PREVIA DE IMAGEN Y CANCELAR
-// ==========================================
-
-// 1. Función Global para el botón "Cancelar"
-window.cancelarEdicion = function() {
-    const form = document.getElementById('form-producto');
-    const btnSubmit = document.getElementById('btn-submit');
-    const btnCancelar = document.getElementById('btn-cancelar');
-    const editIdInput = document.getElementById('edit-id');
-
-    form.reset(); // Limpia los inputs de texto
-    editIdInput.value = ''; // Resetea el ID de edición
-    btnSubmit.textContent = 'GUARDAR PRODUCTO';
-    btnCancelar.style.display = 'none';
-    editandoId = null;
-
-    resetearVistaPrevia(); // Limpia la imagen
-}
-
-// Función auxiliar para volver al estado inicial de "Toca para subir"
-function resetearVistaPrevia() {
-    const fileInput = document.getElementById('imagen-file');
-    const preview = document.getElementById('imagen-preview');
-    const prompt = document.getElementById('upload-prompt');
-
-    if (fileInput) fileInput.value = ''; // Limpia el input file
-    if (preview) {
-        preview.src = '';
-        preview.style.display = 'none'; // Oculta la imagen
-    }
-    if (prompt) prompt.style.display = 'block'; // Muestra el texto y el icono
-}
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Referencias a los nuevos elementos
-    const fileInput = document.getElementById('imagen-file');
-    const preview = document.getElementById('imagen-preview');
-    const prompt = document.getElementById('upload-prompt');
-
-    // 2. Listener para mostrar vista previa al seleccionar archivo local
-    if (fileInput) {
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    preview.src = event.target.result; // Asigna la imagen leída
-                    preview.style.display = 'block';   // Muestra la etiqueta img
-                    prompt.style.display = 'none';     // Oculta el texto de ayuda
-                }
-                reader.readAsDataURL(file); // Lee el archivo como URL
-            } else {
-                // Si el usuario cancela la selección de archivo
-                 if (!editandoId) resetearVistaPrevia();
-            }
-        });
-    }
-
-    // 3. Modificar el listener de EDITAR para mostrar la imagen existente
-    // Busca en tu código actual donde dice: if (e.target.closest('.btn-edit')) { ...
-    // Y añade estas líneas justo después de llenar el formulario:
-    const originalEditHandler = document.addEventListener('click', async (e) => {
-        const btnEdit = e.target.closest('.btn-edit');
-        if (btnEdit) {
-             // ... (tu código que obtiene el producto y llena los inputs) ...
-            const id = btnEdit.dataset.id;
-            const prod = todosLosProductos.find(p => p.id == id);
-             
-            if (prod) {
-                // Lógica añadida para la vista previa al editar
-                if (prod.imagen_url) {
-                    preview.src = prod.imagen_url;
-                    preview.style.display = 'block';
-                    prompt.style.display = 'none';
-                } else {
-                    resetearVistaPrevia();
-                }
-            }
-        }
-    });
-});
