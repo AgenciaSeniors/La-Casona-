@@ -75,20 +75,28 @@ if (lista.length === 0) {
                 <div class="category-section" id="section-${catKey}" data-categoria="${catKey}">
                     <h2 class="category-title-casona">${catInfo.icono} ${catInfo.nombre}</h2>
                     <div class="horizontal-scroll">
-                        ${productosCategoria.map(item => `
-                            <div class="card-casona" onclick="abrirDetalle(${item.id})">
-                                <div class="card-img-container">
-                                    <img src="${item.imagen_url || 'https://via.placeholder.com/300'}" loading="lazy">
-                                    ${item.destacado ? '<span class="tag-destacado">TOP</span>' : ''}
-                                </div>
-                                <div class="card-body">
-                                    <h3>${item.nombre}</h3>
-                                    <div class="card-footer">
-                                        <span class="card-price">$${item.precio}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
+                      ${productosCategoria.map(item => {
+    // Definimos si el producto está agotado según la columna 'estado' de Supabase
+    const esAgotado = item.estado === 'agotado';
+    const claseAgotado = esAgotado ? 'is-agotado' : '';
+    const badgeAgotado = esAgotado ? '<div class="badge-agotado-casona">AGOTADO</div>' : '';
+
+    return `
+        <div class="card-casona ${claseAgotado}" onclick="${esAgotado ? '' : `abrirDetalle(${item.id})`}">
+            <div class="card-img-container" style="position: relative;">
+                ${badgeAgotado}
+                <img src="${item.imagen_url || 'https://via.placeholder.com/300'}" loading="lazy">
+                ${item.destacado ? '<span class="tag-destacado">TOP</span>' : ''}
+            </div>
+            <div class="card-body">
+                <h3>${item.nombre}</h3>
+                <div class="card-footer">
+                    <span class="card-price">$${item.precio}</span>
+                </div>
+            </div>
+        </div>
+    `;
+}).join('')}
                     </div>
                 </div>
             `;
@@ -418,6 +426,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
