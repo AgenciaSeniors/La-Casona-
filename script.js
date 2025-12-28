@@ -98,21 +98,19 @@ if (lista.length === 0) {
     activarVigilanciaCategorias();
 }
 
-// 3. DETALLE (CORREGIDO)
 async function abrirDetalle(id) {
     productoActual = todosLosProductos.find(p => p.id === id);
     if (!productoActual) return;
 
-    // Llenar datos básicos
-    const imgEl = document.getElementById('det-img');
-    if(imgEl) imgEl.src = productoActual.imagen_url || '';
-    
+    // 1. Llenar textos básicos
     setText('det-titulo', productoActual.nombre);
     setText('det-desc', productoActual.descripcion);
-    setText('det-precio', `$${productoActual.precio}`);
+    setText('det-price', `$${productoActual.precio}`);
+    const imgEl = document.getElementById('det-img');
+    if(imgEl) imgEl.src = productoActual.imagen_url || '';
 
+    // 2. BUSCAR RESEÑAS REALES PARA EL PROMEDIO
     try {
-        // 1. Pedimos las notas de este producto a Supabase para calcular el promedio real
         const { data: notas, error } = await supabaseClient
             .from('opiniones')
             .select('puntuacion')
@@ -120,28 +118,27 @@ async function abrirDetalle(id) {
 
         if (error) throw error;
 
-        let promedio = "5.0"; 
-        let cantidad = 0;
+        let promedioTotal = "0.0";
+        let cantidadTotal = 0;
 
         if (notas && notas.length > 0) {
             const suma = notas.reduce((acc, curr) => acc + curr.puntuacion, 0);
-            promedio = (suma / notas.length).toFixed(1);
-            cantidad = notas.length;
+            promedioTotal = (suma / notas.length).toFixed(1);
+            cantidadTotal = notas.length;
         }
 
-        // 2. Actualizamos los textos del "Rating Badge" que creamos
-        const notaEl = document.getElementById('det-puntuacion-valor');
-        const cantEl = document.getElementById('det-cantidad-opiniones');
+        // Actualizamos los IDs de tu valoración clicable
+        const notaValor = document.getElementById('det-puntuacion-valor');
+        const cantidadTexto = document.getElementById('det-cantidad-opiniones');
         
-        if (notaEl) notaEl.textContent = promedio;
-        if (cantEl) cantEl.textContent = `(${cantidad} reseñas)`;
+        if (notaValor) notaValor.textContent = promedioTotal;
+        if (cantidadTexto) cantidadTexto.textContent = `(${cantidadTotal} reseñas)`;
 
     } catch (err) {
-        console.error("Error al calcular promedio:", err);
-        setText('det-puntuacion-valor', "5.0");
+        console.error("Error obteniendo promedio:", err);
     }
 
-    // 3. Mostrar el modal con animación
+    // 3. Mostrar modal
     const modal = document.getElementById('modal-detalle');
     if(modal) {
         modal.style.display = 'flex';
@@ -369,20 +366,18 @@ async function enviarOpinion() {
     }
 }
 async function abrirListaOpiniones() {
-    // 1. Identificamos los elementos
     const contenedor = document.getElementById('contenedor-opiniones-full');
     const modalLista = document.getElementById('modal-lista-opiniones');
     
-    // 2. Mostramos el modal con animación
+    if (!productoActual) return;
+
     modalLista.style.display = 'flex';
     setTimeout(() => modalLista.classList.add('active'), 10);
     
-    // 3. Mensaje de carga
-    contenedor.innerHTML = '<p style="text-align:center; padding:20px; color:#aaa;">Cargando opiniones...</p>';
+    contenedor.innerHTML = '<p style="text-align:center; padding:20px; color:#aaa;">Buscando reseñas...</p>';
 
     try {
-        // 4. Pedimos las opiniones del producto actual a Supabase
-        // Usamos productoActual.id porque es el plato que el cliente tiene abierto
+        // Pedimos los comentarios actualizados
         const { data: opiniones, error } = await supabaseClient
             .from('opiniones')
             .select('*')
@@ -391,30 +386,28 @@ async function abrirListaOpiniones() {
 
         if (error) throw error;
 
-        // 5. Si no hay opiniones, avisamos
         if (!opiniones || opiniones.length === 0) {
-            contenedor.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">Aún no hay reseñas para este plato.</p>';
+            contenedor.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">Aún no hay comentarios. ¡Sé el primero!</p>';
             return;
         }
 
-        // 6. Dibujamos la lista de opiniones (usando 'cliente_nombre' como dijiste)
+        // Pintamos la lista con las estrellas al lado
         contenedor.innerHTML = opiniones.map(op => `
             <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 3px solid #2ECC71;">
                 <div style="display:flex; justify-content:space-between; align-items: flex-start;">
                     <strong style="color:white; font-size:0.9rem;">${op.cliente_nombre || 'Anónimo'}</strong>
                     <span style="color:#f1c40f; font-size:0.8rem;">${'★'.repeat(op.puntuacion)}</span>
                 </div>
-                <p style="color:#bbb; font-size:0.85rem; margin-top:8px; line-height:1.4; font-style: italic;">
+                <p style="color:#bbb; font-size:0.85rem; margin-top:8px; line-height:1.4;">
                     "${op.comentario || 'Sin comentario escrito.'}"
                 </p>
             </div>
         `).join('');
 
     } catch (err) {
-        contenedor.innerHTML = '<p style="color:red; text-align:center;">Error: ' + err.message + '</p>';
+        contenedor.innerHTML = '<p style="color:red; text-align:center;">Error de conexión.</p>';
     }
 }
-
 function cerrarListaOpiniones() {
     const modalLista = document.getElementById('modal-lista-opiniones');
     if(modalLista) {
@@ -422,6 +415,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
