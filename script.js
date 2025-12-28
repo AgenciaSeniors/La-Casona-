@@ -339,4 +339,58 @@ async function enviarOpinion() {
         btn.textContent = "ENVIAR OPINIÓN";
     }
 }
+async function abrirListaOpiniones() {
+    // 1. Identificamos los elementos
+    const contenedor = document.getElementById('contenedor-opiniones-full');
+    const modalLista = document.getElementById('modal-lista-opiniones');
+    
+    // 2. Mostramos el modal con animación
+    modalLista.style.display = 'flex';
+    setTimeout(() => modalLista.classList.add('active'), 10);
+    
+    // 3. Mensaje de carga
+    contenedor.innerHTML = '<p style="text-align:center; padding:20px; color:#aaa;">Cargando opiniones...</p>';
+
+    try {
+        // 4. Pedimos las opiniones del producto actual a Supabase
+        // Usamos productoActual.id porque es el plato que el cliente tiene abierto
+        const { data: opiniones, error } = await supabaseClient
+            .from('opiniones')
+            .select('*')
+            .eq('producto_id', productoActual.id)
+            .order('id', { ascending: false });
+
+        if (error) throw error;
+
+        // 5. Si no hay opiniones, avisamos
+        if (!opiniones || opiniones.length === 0) {
+            contenedor.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">Aún no hay reseñas para este plato.</p>';
+            return;
+        }
+
+        // 6. Dibujamos la lista de opiniones (usando 'cliente_nombre' como dijiste)
+        contenedor.innerHTML = opiniones.map(op => `
+            <div style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 3px solid #2ECC71;">
+                <div style="display:flex; justify-content:space-between; align-items: flex-start;">
+                    <strong style="color:white; font-size:0.9rem;">${op.cliente_nombre || 'Anónimo'}</strong>
+                    <span style="color:#f1c40f; font-size:0.8rem;">${'★'.repeat(op.puntuacion)}</span>
+                </div>
+                <p style="color:#bbb; font-size:0.85rem; margin-top:8px; line-height:1.4; font-style: italic;">
+                    "${op.comentario || 'Sin comentario escrito.'}"
+                </p>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        contenedor.innerHTML = '<p style="color:red; text-align:center;">Error: ' + err.message + '</p>';
+    }
+}
+
+function cerrarListaOpiniones() {
+    const modalLista = document.getElementById('modal-lista-opiniones');
+    if(modalLista) {
+        modalLista.classList.remove('active');
+        setTimeout(() => modalLista.style.display = 'none', 300);
+    }
+}
 
