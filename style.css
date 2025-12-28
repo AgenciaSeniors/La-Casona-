@@ -1016,3 +1016,29 @@ footer {
     cursor: pointer;
     text-transform: uppercase;
 }
+/* --- ESTILO PARA PRODUCTOS AGOTADOS --- */
+
+/* Hace que la tarjeta sea opaca y no se pueda clicar */
+.card-casona.is-agotado {
+    opacity: 0.55;
+    filter: grayscale(0.8);
+    pointer-events: none; /* Evita que se abra el detalle al tocarlo */
+}
+
+/* El cartel de AGOTADO sobre la imagen */
+.badge-agotado-casona {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+    background-color: var(--red-danger); /* Usa el rojo definido en tus variables */
+    color: white;
+    padding: 8px 16px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    z-index: 15;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border: 2px solid white;
+    text-transform: uppercase;
+}
