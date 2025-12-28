@@ -119,7 +119,7 @@ function abrirDetalle(id) {
         setTimeout(() => modal.classList.add('active'), 10);
        
     }
-}
+
         // 3. Ponemos el resultado en el HTML
         document.getElementById('det-puntuacion-valor').textContent = promedio;
         document.getElementById('det-cantidad-opiniones').textContent = `(${notas.length} reseñas)`;
@@ -409,6 +409,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
