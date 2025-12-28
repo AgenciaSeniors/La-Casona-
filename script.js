@@ -306,8 +306,8 @@ async function enviarOpinion() {
     }
 
     const btn = document.getElementById('btn-enviar-opinion');
-    const nombreInput = document.getElementById('cliente-nombre');
-    const comentarioInput = document.getElementById('cliente-comentario');
+    const nombreInput = document.getElementById('clientes-nombre');
+    const comentarioInput = document.getElementById('clientes-comentario');
 
     // 3. Bloqueo de seguridad para evitar múltiples clics
     btn.disabled = true;
@@ -319,7 +319,7 @@ async function enviarOpinion() {
             .from('opiniones')
             .insert([{
                 producto_id: productoActual.id, 
-                cliente: nombreInput.value.trim() || "Anónimo",
+                clientes: nombreInput.value.trim() || "Anónimo",
                 comentario: comentarioInput.value.trim(),
                 puntuacion: puntuacionSeleccionada,
                 restaurant_id: CONFIG.RESTAURANT_ID
@@ -339,3 +339,4 @@ async function enviarOpinion() {
         btn.textContent = "ENVIAR OPINIÓN";
     }
 }
+
