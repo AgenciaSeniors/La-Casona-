@@ -98,42 +98,55 @@ if (lista.length === 0) {
     activarVigilanciaCategorias();
 }
 
-// 3. DETALLE
-function abrirDetalle(id) {
+// 3. DETALLE (CORREGIDO)
+async function abrirDetalle(id) {
     productoActual = todosLosProductos.find(p => p.id === id);
     if (!productoActual) return;
 
+    // Llenar datos básicos
     const imgEl = document.getElementById('det-img');
     if(imgEl) imgEl.src = productoActual.imagen_url || '';
     
     setText('det-titulo', productoActual.nombre);
     setText('det-desc', productoActual.descripcion);
     setText('det-precio', `$${productoActual.precio}`);
-    
-    const ratingBig = productoActual.ratingPromedio ? `★ ${productoActual.ratingPromedio}` : '★ --';
-    setText('det-rating-big', ratingBig);
 
+    try {
+        // 1. Pedimos las notas de este producto a Supabase para calcular el promedio real
+        const { data: notas, error } = await supabaseClient
+            .from('opiniones')
+            .select('puntuacion')
+            .eq('producto_id', id);
+
+        if (error) throw error;
+
+        let promedio = "5.0"; 
+        let cantidad = 0;
+
+        if (notas && notas.length > 0) {
+            const suma = notas.reduce((acc, curr) => acc + curr.puntuacion, 0);
+            promedio = (suma / notas.length).toFixed(1);
+            cantidad = notas.length;
+        }
+
+        // 2. Actualizamos los textos del "Rating Badge" que creamos
+        const notaEl = document.getElementById('det-puntuacion-valor');
+        const cantEl = document.getElementById('det-cantidad-opiniones');
+        
+        if (notaEl) notaEl.textContent = promedio;
+        if (cantEl) cantEl.textContent = `(${cantidad} reseñas)`;
+
+    } catch (err) {
+        console.error("Error al calcular promedio:", err);
+        setText('det-puntuacion-valor', "5.0");
+    }
+
+    // 3. Mostrar el modal con animación
     const modal = document.getElementById('modal-detalle');
     if(modal) {
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('active'), 10);
-       
     }
-
-        // 3. Ponemos el resultado en el HTML
-        document.getElementById('det-puntuacion-valor').textContent = promedio;
-        document.getElementById('det-cantidad-opiniones').textContent = `(${notas.length} reseñas)`;
-
-    } catch (err) {
-        console.error("Error al calcular promedio:", err);
-        document.getElementById('det-puntuacion-valor').textContent = "5.0";
-    }
-
-    // Mostrar el modal
-    const modal = document.getElementById('modal-detalle');
-    modal.style.display = 'flex';
-    setTimeout(() => modal.classList.add('active'), 10);
-}
 }
 
 function setText(id, text) {
@@ -409,6 +422,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
