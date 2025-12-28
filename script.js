@@ -293,50 +293,49 @@ document.addEventListener('click', (e) => {
 // Al final siempre va el DOMContentLoaded
 document.addEventListener('DOMContentLoaded', cargarMenu);
 async function enviarOpinion() {
-    // 1. Verificamos que se haya elegido una puntuación
-    if (typeof puntuacionSeleccionada === 'undefined' || puntuacionSeleccionada === 0) {
-        alert("⚠️ Por favor, toca las estrellas para darnos una puntuación.");
+    // 1. Validaciones de seguridad
+    if (!puntuacionSeleccionada || puntuacionSeleccionada === 0) {
+        alert("⚠️ Por favor, selecciona una puntuación con las estrellas.");
         return;
     }
 
-    // 2. Verificamos que haya un producto seleccionado
-    if (!productoActual || !productoActual.id) {
-        alert("⚠️ Error: No se detecta el producto. Intenta cerrar y abrir el plato de nuevo.");
+    // 2. BUSCAMOS LOS ELEMENTOS (Asegúrate de que estos IDs coincidan con tu index.html)
+    // Probablemente en tu HTML se llaman 'cliente-nombre' y 'cliente-comentario' sin la S
+    const elNombre = document.getElementById('cliente-nombre'); 
+    const elComentario = document.getElementById('cliente-comentario');
+
+    // Aquí es donde ocurría el error: verificamos que los cuadros existan antes de leer su .value
+    if (!elNombre || !elComentario) {
+        alert("❌ Error técnico: No se encuentran los cuadros de texto en el HTML. Revisa los IDs.");
         return;
     }
 
     const btn = document.getElementById('btn-enviar-opinion');
-    const nombreInput = document.getElementById('clientes-nombre');
-    const comentarioInput = document.getElementById('clientes-comentario');
-
-    // 3. Bloqueo de seguridad para evitar múltiples clics
     btn.disabled = true;
     btn.textContent = "ENVIANDO...";
 
     try {
-        // 4. Inserción en la tabla 'opiniones'
+        // 3. ENVÍO A SUPABASE
         const { error } = await supabaseClient
             .from('opiniones')
             .insert([{
                 producto_id: productoActual.id, 
-                clientes: nombreInput.value.trim() || "Anónimo",
-                comentario: comentarioInput.value.trim(),
+                clientes: elNombre.value.trim() || "Anónimo", // 'clientes' con S porque así se llama tu COLUMNA en Supabase
+                comentario: elComentario.value.trim(),      // Revisa si en Supabase es 'comentario' o 'comentarios'
                 puntuacion: puntuacionSeleccionada,
                 restaurant_id: CONFIG.RESTAURANT_ID
             }]);
 
         if (error) throw error;
 
-        // 5. ÉXITO
-        alert("✅ ¡Muchas gracias! Tu opinión ha sido guardada.");
+        alert("✅ ¡Gracias! Tu opinión ha sido enviada.");
         cerrarModalOpiniones();
         
     } catch (err) {
-        console.error("Error completo:", err);
+        console.error("Error al enviar:", err);
         alert("❌ No se pudo enviar: " + err.message);
     } finally {
         btn.disabled = false;
         btn.textContent = "ENVIAR OPINIÓN";
     }
 }
-
