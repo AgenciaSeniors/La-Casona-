@@ -105,7 +105,7 @@ async function abrirDetalle(id) {
     // 1. Llenar textos básicos
     setText('det-titulo', productoActual.nombre);
     setText('det-desc', productoActual.descripcion);
-    setText('det-price', `$${productoActual.precio}`);
+    setText('det-precio', `$${productoActual.precio}`);
     const imgEl = document.getElementById('det-img');
     if(imgEl) imgEl.src = productoActual.imagen_url || '';
 
@@ -138,14 +138,13 @@ async function abrirDetalle(id) {
         console.error("Error obteniendo promedio:", err);
     }
 
-    // 3. Mostrar modal
+    // 3. Mostrar el modal con la animación
     const modal = document.getElementById('modal-detalle');
     if(modal) {
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('active'), 10);
     }
 }
-
 function setText(id, text) {
     const el = document.getElementById(id);
     if(el) el.textContent = text;
@@ -415,6 +414,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
