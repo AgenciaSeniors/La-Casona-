@@ -124,31 +124,40 @@ function cerrarDetalle() {
         setTimeout(() => modal.style.display = 'none', 350);
     }
 }
-
 function filtrar(cat, btn) {
-    // 1. Manejo visual de los botones (quitar activo de otros, poner en este)
+    // 1. Cambiar el estado visual de los botones
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
 
-    // 2. Si es 'todos' o 'inicio', subimos al tope
+    // 2. Si se elige 'todos' o 'inicio', volver arriba y mostrar todo
     if (cat === 'todos') {
+        renderizarMenu(todosLosProductos); // Asegura que se vea todo
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
     }
 
-    // 3. Buscamos la sección por su ID (ej: section-pizzas)
-    const seccion = document.getElementById(`section-${cat}`);
+    // 3. ASEGURAR que el menú completo esté renderizado 
+    // (Por si antes el usuario usó el buscador y ocultó cosas)
+    const buscador = document.getElementById('search-input');
+    if (buscador && buscador.value !== "") {
+        buscador.value = ""; // Limpiamos buscador
+        renderizarMenu(todosLosProductos); // Mostramos todo
+    }
 
-    if (seccion) {
-        // Calculamos la posición restando un margen (offset) 
-        // para que la barra de filtros sticky no tape el título
-        const headerOffset = 120; // Ajusta este valor según el alto de tu cabecera
-        const elementPosition = seccion.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-        window.scrollTo({top: offsetPosition,behavior: 'smooth'});
+    // 4. HACER SCROLL a la sección correspondiente
+    // Tu script.js ya crea divs con id="section-pizzas", etc.
+    const seccionDestino = document.getElementById(`section-${cat}`);
+    
+    if (seccionDestino) {
+        const posicion = seccionDestino.offsetTop - 120; // -120px para que el menú fijo no tape el título
+        window.scrollTo({
+            top: posicion,
+            behavior: 'smooth'
+        });
     }
 }
+
+    
 // Función para el botón Inicio
 function irAlInicio(btn) {
     // 1. Sube la pantalla al inicio suavemente
@@ -162,6 +171,7 @@ function irAlInicio(btn) {
     filtrar('todos', btn);
 }
 document.addEventListener('DOMContentLoaded', cargarMenu);
+
 
 
 
