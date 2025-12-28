@@ -146,10 +146,7 @@ function filtrar(cat, btn) {
         const elementPosition = seccion.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-        });
+        window.scrollTo({top: offsetPosition,behavior: 'smooth'});
     }
 }
 // Función para el botón Inicio
@@ -165,6 +162,7 @@ function irAlInicio(btn) {
     filtrar('todos', btn);
 }
 document.addEventListener('DOMContentLoaded', cargarMenu);
+
 
 
 
