@@ -954,3 +954,19 @@ footer {
     margin-bottom: 15px;
     transition: 0.3s;
 }
+.btn-opinion-small {
+    background-color: #2ECC71;
+    color: #000;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-transform: uppercase;
+}
+
+.btn-opinion-small:active {
+    transform: scale(0.95);
+}
