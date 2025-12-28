@@ -241,6 +241,29 @@ function activarVigilanciaCategorias() {
     const secciones = document.querySelectorAll('.category-section');
     secciones.forEach(sec => observadorScroll.observe(sec));
 }
+// --- SISTEMA DE OPINIONES Y VALORACIONES ---
+
+// 1. Abrir el modal de opinión desde el detalle
+function abrirOpinionDesdeDetalle() {
+    // Cerramos el modal de detalles primero
+    cerrarDetalle();
+    
+    const modalOpinion = document.getElementById('modal-opinion');
+    if (modalOpinion) {
+        modalOpinion.style.display = 'flex';
+        modalOpinion.classList.add('active');
+        // Reset de estrellas y campos
+        puntuacion = 0;
+        document.querySelectorAll('#stars-container span').forEach(s => s.style.color = '#444');
+        document.getElementById('cliente-nombre').value = '';
+        document.getElementById('cliente-comentario').value = '';
+    }
+}
+
+function cerrarModalOpiniones() {
+    const modalOpinion = document.getElementById('modal-opinion');
+    if (modalOpinion) {
+        modalOpinion
 
 
 
