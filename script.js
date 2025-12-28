@@ -134,6 +134,43 @@ function filtrar(cat, btn) {
 }
 
 document.addEventListener('DOMContentLoaded', cargarMenu);
+// --- LÓGICA DEL BUSCADOR ---
+
+// Función que realiza el filtrado
+function buscarProductos(termino) {
+    const busqueda = termino.toLowerCase().trim();
+
+    // Si no hay nada escrito, mostramos todo
+    if (busqueda === "") {
+        renderizarMenu(todosLosProductos);
+        return;
+    }
+
+    // Filtramos el array global por nombre o descripción
+    const filtrados = todosLosProductos.filter(p => {
+        const nombre = p.nombre ? p.nombre.toLowerCase() : "";
+        const descripcion = p.descripcion ? p.descripcion.toLowerCase() : "";
+        return nombre.includes(busqueda) || descripcion.includes(busqueda);
+    });
+
+    renderizarMenu(filtrados);
+}
+
+// Evento que detecta la escritura en el input
+document.addEventListener('DOMContentLoaded', () => {
+    const inputBusqueda = document.getElementById('search-input');
+    
+    if (inputBusqueda) {
+        inputBusqueda.addEventListener('input', (e) => {
+            // Limpiamos el timeout anterior para esperar a que el usuario termine de escribir
+            clearTimeout(searchTimeout);
+            
+            searchTimeout = setTimeout(() => {
+                buscarProductos(e.target.value);
+            }, 300); // 300ms de espera
+        });
+    }
+});
 
 
 
