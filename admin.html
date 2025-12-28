@@ -10,9 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
 </head>
-<body class="admin-body">
-
-    <header class="admin-header">
+<body> <header class="admin-header">
         <div style="display:flex; align-items:center;">
             <h1 class="admin-title">Panel Gerencial</h1>
             <span class="admin-badge">ADMIN</span>
@@ -23,9 +21,7 @@
         </div>
     </header>
 
-    <div class="dashboard-grid">
-        
-        <div class="upload-zone">
+    <div class="dashboard-grid"> <div class="upload-zone">
             <h3 style="color:white; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px;">Gestión de Producto</h3>
             
             <form id="form-producto">
@@ -36,38 +32,36 @@
                     <input type="text" id="nombre" class="input-stylish" required>
                 </div>
 
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                    <div class="input-group">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin-bottom: 20px;">
+                    <div class="input-group" style="margin-bottom:0;">
                         <label>Precio</label>
                         <input type="number" id="precio" class="input-stylish" required>
                     </div>
-                    <div class="input-group">
+                    <div class="input-group" style="margin-bottom:0;">
                         <label>Categoría</label>
-                      <select id="categoria" class="input-stylish" required>
-    <option value="" disabled selected>Seleccionar Categoría</option>
-    <option value="entrantes">Entrantes</option>
-    <option value="completas">Completas</option>
-    <option value="pizzas">Pizzas</option>
-    <option value="spaguettis">Spaguettis</option>
-    <option value="bebidas">Bebidas</option>
-    <option value="postres">Postres</option>
-</select>
+                        <select id="categoria" class="input-stylish" required>
+                            <option value="" disabled selected>Seleccionar Categoría</option>
+                            <option value="entrantes">Entrantes</option>
+                            <option value="completas">Completas</option>
+                            <option value="pizzas">Pizzas</option>
+                            <option value="spaguettis">Spaguettis</option>
+                            <option value="bebidas">Bebidas</option>
+                            <option value="postres">Postres</option>
+                            <option value="agregados">Agregados</option>
+                        </select>
                     </div>
                 </div>
 
-             <div class="input-group">
-    <label>Foto <small style="color:#666; font-weight:normal;">(Opcional al editar)</small></label>
-    
-    <label class="file-upload-wrapper" for="imagen-file" style="cursor: pointer;">
-        <span class="material-icons" style="font-size:2rem; color:#666; margin-bottom:5px;">cloud_upload</span>
-        <span class="file-upload-text">Toca para subir imagen</span>
-        
-        <input type="file" id="imagen-file" accept="image/*" style="display: none;">
-    </label>
-</div>
+                <div class="input-group">
+                    <label>Foto <small style="color:#666; font-weight:normal;">(Opcional al editar)</small></label>
+                    <label class="file-upload-wrapper" for="imagen-file" style="cursor: pointer;">
+                        <span class="material-icons" style="font-size:2rem; color:#666; margin-bottom:5px;">cloud_upload</span>
+                        <span class="file-upload-text">Toca para subir imagen</span>
+                        <input type="file" id="imagen-file" accept="image/*" style="display: none;">
+                    </label>
                 </div>
-    </div>
-              <div class="input-group">
+
+                <div class="input-group">
                     <label>Descripción</label>
                     <textarea id="descripcion" class="input-stylish" rows="2"></textarea>
                 </div>
@@ -84,14 +78,24 @@
                     </button>
                 </div>
             </form>
-        </div> <div class="inventory-zone">
+        </div> 
+
+        <div class="inventory-zone">
             <h3 style="color:white; margin-bottom:20px;">Inventario</h3>
             <div id="lista-admin" class="inventory-list">
                 </div>
         </div>
 
-    </div> <script src="admin.js"></script>
-</body>
+    </div> 
 
+    <script src="admin.js"></script>
 
+</body> ```
 
+### ¿Por qué esto lo arregla?
+* **Contenedor Grid**: He puesto el formulario dentro de `.upload-zone` y la lista en `.inventory-zone`, ambos dentro de `.dashboard-grid`.
+* **Ancho del botón**: Al estar dentro de la columna de la izquierda (que mide 350px), el botón de guardar se ajustará a ese ancho y no ocupará toda la pantalla.
+* **Descripción**: Está fuera del grid de Precio/Categoría, así que volverá a ocupar todo el ancho del formulario.
+
+---
+¿Te gustaría que añadiera un aviso que diga "Cargando..." en el botón de guardar para que no lo presiones dos veces mientras se sube la foto?
