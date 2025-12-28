@@ -320,7 +320,7 @@ async function enviarOpinion() {
             .from('opiniones')
             .insert([{
                 producto_id: productoActual.id, 
-                clientes: elNombre.value.trim() || "Anónimo", // 'clientes' con S porque así se llama tu COLUMNA en Supabase
+                cliente_nombre: elNombre.value.trim() || "Anónimo", // 'clientes' con S porque así se llama tu COLUMNA en Supabase
                 comentario: elComentario.value.trim(),      // Revisa si en Supabase es 'comentario' o 'comentarios'
                 puntuacion: puntuacionSeleccionada,
                 restaurant_id: CONFIG.RESTAURANT_ID
@@ -339,3 +339,4 @@ async function enviarOpinion() {
         btn.textContent = "ENVIAR OPINIÓN";
     }
 }
+
