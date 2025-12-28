@@ -263,15 +263,57 @@ function abrirOpinionDesdeDetalle() {
 function cerrarModalOpiniones() {
     const modalOpinion = document.getElementById('modal-opinion');
     if (modalOpinion) {
-        modalOpinion
+        modalOpinion.classList.remove('active');
+        setTimeout(() => modalOpinion.style.display = 'none', 300);
+    }
+}
 
+// 2. Lógica para seleccionar las estrellas
+document.getElementById('stars-container').addEventListener('click', (e) => {
+    if (e.target.dataset.val) {
+        puntuacion = parseInt(e.target.dataset.val);
+        const estrellas = document.querySelectorAll('#stars-container span');
+        estrellas.forEach((s, index) => {
+            s.style.color = index < puntuacion ? '#2ECC71' : '#444'; // Verde Casona
+        });
+    }
+});
 
+// 3. Enviar la opinión a Supabase
+async function enviarOpinion() {
+    if (puntuacion === 0) {
+        alert("Por favor, selecciona una puntuación.");
+        return;
+    }
 
+    const nombre = document.getElementById('cliente-nombre').value || "Anónimo";
+    const comentario = document.getElementById('cliente-comentario').value;
+    const btn = document.getElementById('btn-enviar-opinion');
 
+    btn.disabled = true;
+    btn.textContent = "ENVIANDO...";
 
+    try {
+        const { error } = await supabaseClient
+            .from('opiniones')
+            .insert([{
+                producto_id: productoActual.id, // Usamos el ID del producto que estaba abierto
+                cliente: nombre,
+                comentario: comentario,
+                puntuacion: puntuacion,
+                restaurant_id: CONFIG.RESTAURANT_ID
+            }]);
 
+        if (error) throw error;
 
+        alert("¡Muchas gracias por tu opinión!");
+        cerrarModalOpiniones();
+        cargarMenu(); // Recargamos para actualizar el promedio de estrellas en la carta
 
-
-
-
+    } catch (err) {
+        alert("Error al enviar: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "ENVIAR";
+    }
+}
