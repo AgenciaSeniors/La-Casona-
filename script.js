@@ -117,6 +117,11 @@ function abrirDetalle(id) {
     if(modal) {
         modal.style.display = 'flex';
         setTimeout(() => modal.classList.add('active'), 10);
+        const notaElemento = document.getElementById('det-puntuacion-valor');
+    if (notaElemento) {
+        notaElemento.textContent = productoActual.puntuacion || "5.0"; 
+    }
+}
     }
 }
 
@@ -393,4 +398,5 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
