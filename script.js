@@ -135,7 +135,7 @@ function abrirDetalle(id) {
             const suma = notas.reduce((acc, curr) => acc + curr.puntuacion, 0);
             promedio = (suma / notas.length).toFixed(1); // Ejemplo: 4.6
         }
-
+    }
         // 3. Ponemos el resultado en el HTML
         document.getElementById('det-puntuacion-valor').textContent = promedio;
         document.getElementById('det-cantidad-opiniones').textContent = `(${notas.length} reseñas)`;
@@ -425,6 +425,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
