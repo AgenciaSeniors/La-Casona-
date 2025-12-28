@@ -292,3 +292,50 @@ document.addEventListener('click', (e) => {
 
 // Al final siempre va el DOMContentLoaded
 document.addEventListener('DOMContentLoaded', cargarMenu);
+async function enviarOpinion() {
+    // 1. Verificamos que se haya elegido una puntuación
+    if (typeof puntuacionSeleccionada === 'undefined' || puntuacionSeleccionada === 0) {
+        alert("⚠️ Por favor, toca las estrellas para darnos una puntuación.");
+        return;
+    }
+
+    // 2. Verificamos que haya un producto seleccionado
+    if (!productoActual || !productoActual.id) {
+        alert("⚠️ Error: No se detecta el producto. Intenta cerrar y abrir el plato de nuevo.");
+        return;
+    }
+
+    const btn = document.getElementById('btn-enviar-opinion');
+    const nombreInput = document.getElementById('cliente-nombre');
+    const comentarioInput = document.getElementById('cliente-comentario');
+
+    // 3. Bloqueo de seguridad para evitar múltiples clics
+    btn.disabled = true;
+    btn.textContent = "ENVIANDO...";
+
+    try {
+        // 4. Inserción en la tabla 'opiniones'
+        const { error } = await supabaseClient
+            .from('opiniones')
+            .insert([{
+                producto_id: productoActual.id, 
+                cliente: nombreInput.value.trim() || "Anónimo",
+                comentario: comentarioInput.value.trim(),
+                puntuacion: puntuacionSeleccionada,
+                restaurant_id: CONFIG.RESTAURANT_ID
+            }]);
+
+        if (error) throw error;
+
+        // 5. ÉXITO
+        alert("✅ ¡Muchas gracias! Tu opinión ha sido guardada.");
+        cerrarModalOpiniones();
+        
+    } catch (err) {
+        console.error("Error completo:", err);
+        alert("❌ No se pudo enviar: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "ENVIAR OPINIÓN";
+    }
+}
