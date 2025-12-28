@@ -1,21 +1,21 @@
-// 1. VARIABLES GLOBALES
+// 1. VARIABLES DE ESTADO
 let inventarioGlobal = []; 
 
-// 2. SEGURIDAD: VERIFICAR SESIÓN
+// 2. NÚCLEO DE CARGA Y SEGURIDAD
 async function checkAuth() {
-    console.log("Verificando sesión...");
-    if (typeof supabaseClient === 'undefined') {
-        alert("Error: Supabase no está cargado. Revisa tu archivo config.js");
-        return;
-    }
-    const { data: { session }, error } = await supabaseClient.auth.getSession();
-    
-    if (error || !session) {
-        console.log("Sin sesión activa, redirigiendo a login...");
-        window.location.href = "login.html";
-    } else {
-        console.log("Sesión iniciada. Cargando inventario...");
-        cargarAdmin();
+    try {
+        if (typeof supabaseClient === 'undefined') {
+            console.error("Supabase no detectado");
+            return;
+        }
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) {
+            window.location.href = "login.html";
+        } else {
+            cargarAdmin();
+        }
+    } catch (err) {
+        console.error("Error en Auth:", err);
     }
 }
 
@@ -24,17 +24,17 @@ async function cerrarSesion() {
     window.location.href = "login.html";
 }
 
-// 3. CARGAR INVENTARIO
+// 3. MOTOR DE RENDERIZADO (El corazón del inventario)
 async function cargarAdmin() {
     const lista = document.getElementById('lista-admin');
     if (!lista) return;
 
-    lista.innerHTML = '<div style="text-align:center; padding:40px; color:#aaa;">⟳ Conectando con la base de datos...</div>';
+    lista.innerHTML = '<div style="text-align:center; padding:40px; color:#aaa;">⟳ Cargando inventario...</div>';
 
     try {
-        // Verificamos que el CONFIG exista
+        // Validación de Configuración
         if (typeof CONFIG === 'undefined' || !CONFIG.RESTAURANT_ID) {
-            throw new Error("El ID del restaurante no está configurado en config.js");
+            throw new Error("ID de restaurante no configurado en config.js");
         }
 
         let { data: productos, error } = await supabaseClient
@@ -47,43 +47,44 @@ async function cargarAdmin() {
         if (error) throw error;
         
         inventarioGlobal = productos || [];
-        console.log("Productos cargados:", inventarioGlobal.length);
 
         if (inventarioGlobal.length === 0) {
-            lista.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Tu inventario está vacío. Agrega tu primer producto a la izquierda.</p>';
+            lista.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">No hay productos. Agrega uno nuevo.</p>';
             return;
         }
 
+        // Generación del HTML con "Safety Checks" para evitar que el bucle se rompa
         lista.innerHTML = inventarioGlobal.map(item => {
             const esAgotado = item.estado === 'agotado';
-            const favColor = item.destacado ? '#2ECC71' : '#444'; // Verde si es destacado
+            const starColor = item.destacado ? '#2ECC71' : '#444'; // Color verde Casona
             
             return `
                 <div class="inventory-item">
-                    <img src="${item.imagen_url || 'https://via.placeholder.com/60'}" class="item-thumb" onerror="this.src='https://via.placeholder.com/60'">
+                    <img src="${item.imagen_url || 'https://via.placeholder.com/60'}" 
+                         class="item-thumb" 
+                         onerror="this.src='https://via.placeholder.com/60'">
                     <div class="item-meta">
-                        <span class="item-title">${item.nombre} ${item.destacado ? '🌟' : ''}</span>
-                        <span class="item-price">$${item.precio}</span>
+                        <span class="item-title">${item.nombre || 'Sin nombre'} ${item.destacado ? '🌟' : ''}</span>
+                        <span class="item-price">$${item.precio || 0}</span>
                         <span class="item-status ${esAgotado ? 'status-bad' : 'status-ok'}">${esAgotado ? 'AGOTADO' : 'DISPONIBLE'}</span>
                     </div>
                     <div class="action-btn-group">
                         <button class="icon-btn" onclick="prepararEdicion(${item.id})" title="Editar"><span class="material-icons">edit</span></button>
-                        <button class="icon-btn" style="color:${favColor}" onclick="toggleDestacado(${item.id}, ${item.destacado})" title="Destacar"><span class="material-icons">star</span></button>
-                        <button class="icon-btn" onclick="toggleEstado(${item.id}, '${item.estado}')" title="Agotar/Activar"><span class="material-icons">${esAgotado ? 'toggle_off' : 'toggle_on'}</span></button>
+                        <button class="icon-btn" style="color:${starColor}" onclick="toggleDestacado(${item.id}, ${item.destacado})" title="Destacar"><span class="material-icons">star</span></button>
+                        <button class="icon-btn" onclick="toggleEstado(${item.id}, '${item.estado}')" title="Alternar Estado"><span class="material-icons">${esAgotado ? 'toggle_off' : 'toggle_on'}</span></button>
                         <button class="icon-btn btn-del" onclick="eliminarProducto(${item.id})" title="Eliminar"><span class="material-icons">delete</span></button>
                     </div>
                 </div>
             `;
         }).join('');
+
     } catch (err) {
-        console.error("Error crítico en cargarAdmin:", err);
-        lista.innerHTML = `<div style="color:#ff5252; padding:20px; text-align:center;">
-            <strong>Error al cargar:</strong><br>${err.message}
-        </div>`;
+        console.error("Fallo en cargarAdmin:", err);
+        lista.innerHTML = `<p style="color:#ff5252; padding:20px; text-align:center;">Error de conexión: ${err.message}</p>`;
     }
 }
 
-// 4. GESTIÓN DE FORMULARIO
+// 4. GESTIÓN DE PRODUCTOS (Insert/Update)
 const form = document.getElementById('form-producto');
 if(form) {
     form.addEventListener('submit', async (e) => {
@@ -98,12 +99,12 @@ if(form) {
             const fileInput = document.getElementById('imagen-file');
             let urlImagen = null;
 
-            // Subida de imagen
+            // Subida de imagen con validación de bucket
             if (fileInput && fileInput.files.length > 0) {
                 const archivo = fileInput.files[0];
                 const nombreArchivo = `prod_${Date.now()}.${archivo.name.split('.').pop()}`;
-                const { error: uploadError } = await supabaseClient.storage.from('imagenes').upload(nombreArchivo, archivo);
-                if (uploadError) throw uploadError;
+                const { error: upErr } = await supabaseClient.storage.from('imagenes').upload(nombreArchivo, archivo);
+                if (upErr) throw upErr;
 
                 const { data } = supabaseClient.storage.from('imagenes').getPublicUrl(nombreArchivo);
                 urlImagen = data.publicUrl;
@@ -126,11 +127,11 @@ if(form) {
 
             if (error) throw error;
             
-            alert("Operación realizada con éxito");
+            alert("¡Guardado correctamente!");
             cancelarEdicion();
             cargarAdmin();
         } catch (error) {
-            alert("Error en la operación: " + error.message);
+            alert("Error: " + error.message);
         } finally {
             btn.textContent = idEdicion ? "ACTUALIZAR PRODUCTO" : "GUARDAR PRODUCTO";
             btn.disabled = false;
@@ -138,7 +139,7 @@ if(form) {
     });
 }
 
-// 5. EDICIÓN Y VISTA PREVIA
+// 5. EDICIÓN Y VISTA PREVIA SEGURA
 function prepararEdicion(id) {
     const p = inventarioGlobal.find(p => p.id === id);
     if (!p) return;
@@ -150,7 +151,7 @@ function prepararEdicion(id) {
     document.getElementById('descripcion').value = p.descripcion || '';
     document.getElementById('destacado').checked = p.destacado;
 
-    // Vista previa
+    // Vista previa con chequeo de existencia de elementos
     const preview = document.getElementById('imagen-preview');
     const prompt = document.getElementById('upload-prompt');
     if (preview && p.imagen_url) {
@@ -160,7 +161,8 @@ function prepararEdicion(id) {
     }
 
     document.getElementById('btn-submit').textContent = "ACTUALIZAR PRODUCTO";
-    document.getElementById('btn-cancelar').style.display = "block";
+    const btnCancel = document.getElementById('btn-cancelar');
+    if (btnCancel) btnCancel.style.display = "block";
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -168,7 +170,8 @@ function cancelarEdicion() {
     if (form) form.reset();
     document.getElementById('edit-id').value = "";
     document.getElementById('btn-submit').textContent = "GUARDAR PRODUCTO";
-    document.getElementById('btn-cancelar').style.display = "none";
+    const btnCancel = document.getElementById('btn-cancelar');
+    if (btnCancel) btnCancel.style.display = "none";
 
     const preview = document.getElementById('imagen-preview');
     const prompt = document.getElementById('upload-prompt');
@@ -176,7 +179,26 @@ function cancelarEdicion() {
     if (prompt) prompt.style.display = 'block';
 }
 
-// Detector de cambio para la vista previa
+// 6. ACCIONES RÁPIDAS
+async function toggleDestacado(id, valor) {
+    await supabaseClient.from('productos').update({ destacado: !valor }).eq('id', id);
+    cargarAdmin();
+}
+
+async function toggleEstado(id, est) {
+    const nuevo = est === 'disponible' ? 'agotado' : 'disponible';
+    await supabaseClient.from('productos').update({ estado: nuevo }).eq('id', id);
+    cargarAdmin();
+}
+
+async function eliminarProducto(id) {
+    if(confirm("¿Eliminar este producto?")) {
+        await supabaseClient.from('productos').update({ activo: false }).eq('id', id);
+        cargarAdmin();
+    }
+}
+
+// Detector de vista previa
 document.addEventListener('change', (e) => {
     if (e.target.id === 'imagen-file') {
         const file = e.target.files[0];
@@ -194,27 +216,5 @@ document.addEventListener('change', (e) => {
     }
 });
 
-// 6. ACCIONES RÁPIDAS
-async function toggleDestacado(id, valor) {
-    const { error } = await supabaseClient.from('productos').update({ destacado: !valor }).eq('id', id);
-    if (error) alert("Error: " + error.message);
-    cargarAdmin();
-}
-
-async function toggleEstado(id, est) {
-    const nuevoEstado = est === 'disponible' ? 'agotado' : 'disponible';
-    const { error } = await supabaseClient.from('productos').update({ estado: nuevoEstado }).eq('id', id);
-    if (error) alert("Error: " + error.message);
-    cargarAdmin();
-}
-
-async function eliminarProducto(id) {
-    if(confirm("¿Estás seguro de eliminar este producto?")) {
-        const { error } = await supabaseClient.from('productos').update({ activo: false }).eq('id', id);
-        if (error) alert("Error: " + error.message);
-        cargarAdmin();
-    }
-}
-
-// INICIO
+// INICIALIZACIÓN
 document.addEventListener('DOMContentLoaded', checkAuth);
