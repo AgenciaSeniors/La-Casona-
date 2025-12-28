@@ -119,23 +119,7 @@ function abrirDetalle(id) {
         setTimeout(() => modal.classList.add('active'), 10);
        
     }
-    try {
-        // 1. Pedimos todas las puntuaciones de este producto a Supabase
-        const { data: notas, error } = await supabaseClient
-            .from('opiniones')
-            .select('puntuacion')
-            .eq('producto_id', id);
-
-        if (error) throw error;
-
-        let promedio = 5.0; // Nota por defecto si no hay opiniones
-
-        if (notas && notas.length > 0) {
-            // 2. Sumamos todas las notas y dividimos por el total
-            const suma = notas.reduce((acc, curr) => acc + curr.puntuacion, 0);
-            promedio = (suma / notas.length).toFixed(1); // Ejemplo: 4.6
-        }
-    }
+}
         // 3. Ponemos el resultado en el HTML
         document.getElementById('det-puntuacion-valor').textContent = promedio;
         document.getElementById('det-cantidad-opiniones').textContent = `(${notas.length} reseñas)`;
@@ -425,6 +409,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
