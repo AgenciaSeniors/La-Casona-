@@ -241,3 +241,29 @@ function activarVigilanciaCategorias() {
     const secciones = document.querySelectorAll('.category-section');
     secciones.forEach(sec => observadorScroll.observe(sec));
 }
+// 1. Funciones para controlar los modales de opinión
+function abrirOpinionDesdeDetalle() {
+    cerrarDetalle(); // Cierra el detalle del plato primero
+    const modalOp = document.getElementById('modal-opinion');
+    if (modalOp) {
+        modalOp.style.display = 'flex';
+        setTimeout(() => modalOp.classList.add('active'), 10);
+        resetearFormularioOpinion();
+    }
+}
+
+function cerrarModalOpiniones() {
+    const modalOp = document.getElementById('modal-opinion');
+    if (modalOp) {
+        modalOp.classList.remove('active');
+        setTimeout(() => modalOp.style.display = 'none', 350);
+    }
+}
+
+function resetearFormularioOpinion() {
+    puntuacionSeleccionada = 0; // Asegúrate de tener esta variable let puntuacionSeleccionada = 0; al inicio del script
+    const estrellas = document.querySelectorAll('#stars-container span');
+    estrellas.forEach(s => s.style.color = '#444');
+    document.getElementById('cliente-nombre').value = '';
+    document.getElementById('cliente-comentario').value = '';
+}
