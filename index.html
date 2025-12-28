@@ -82,20 +82,20 @@
         </div>
 
         <div class="modal-info-container">
-            <div class="modal-header-row">
-                <h2 id="det-titulo"></h2>
-                <div id="det-price" class="modal-price-tag"></div>
+            <div class="modal-header-row" style="display:flex; justify-content:space-between; align-items:center;">
+                <h2 id="det-titulo" style="margin:0; font-size:1.5rem;"></h2>
+                <div id="det-price" class="modal-price-tag" style="font-weight:800; color:#2ECC71; font-size:1.4rem;"></div>
             </div>
 
-            <p id="det-desc" class="modal-description"></p>
+            <p id="det-desc" class="modal-description" style="margin:15px 0; color:#ccc; line-height:1.4;"></p>
 
-            <div class="valoracion-box" onclick="abrirListaOpiniones()">
-                <div class="val-main">
-                    <span>Valoración:</span>
-                    <span class="val-stars">★ <span id="det-puntuacion-valor">0.0</span></span>
+            <div class="valoracion-box" onclick="abrirListaOpiniones()" style="cursor:pointer; background:rgba(255,255,255,0.05); padding:10px; border-radius:10px;">
+                <div class="val-main" style="display:flex; justify-content:space-between;">
+                    <span style="color:#888;">Valoración:</span>
+                    <span style="color:#FFD700; font-weight:bold;">★ <span id="det-puntuacion-valor">0.0</span></span>
                 </div>
-                <div class="val-subtext">
-                    (Presiona aquí para ver reseñas) <span id="det-cantidad-opiniones"></span>
+                <div style="text-align:right; font-size:0.75rem; color:#2ECC71; margin-top:4px;">
+                    (Ver reseñas) <span id="det-cantidad-opiniones"></span>
                 </div>
             </div>
 
@@ -140,6 +140,7 @@
 </body>
 
 </html>
+
 
 
 
