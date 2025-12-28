@@ -3,7 +3,7 @@
 let searchTimeout;
 let todosLosProductos = [];
 let productoActual = null;
-let puntuacion = 0;
+let puntuacionSeleccionada = 0;
 
 // 1. CARGAR MENÚ
 async function cargarMenu() {
@@ -267,3 +267,28 @@ function resetearFormularioOpinion() {
     document.getElementById('cliente-nombre').value = '';
     document.getElementById('cliente-comentario').value = '';
 }
+// ... (todas tus otras funciones: cargarMenu, abrirDetalle, etc.)
+
+// --- ÚLTIMA PARTE DEL ARCHIVO ---
+
+// Listener robusto para las estrellas
+document.addEventListener('click', (e) => {
+    // Verificamos si lo que tocaste es una estrella (span) dentro del contenedor
+    const estrella = e.target.closest('#stars-container span');
+    
+    if (estrella) {
+        // Guardamos el valor (1 al 5) en la variable global que pusimos arriba
+        puntuacionSeleccionada = parseInt(estrella.getAttribute('data-val'));
+        
+        // Pintamos de verde las seleccionadas y de gris las demás
+        const todasLasEstrellas = document.querySelectorAll('#stars-container span');
+        todasLasEstrellas.forEach((s, i) => {
+            s.style.color = (i < puntuacionSeleccionada) ? '#2ECC71' : '#444';
+        });
+        
+        console.log("Puntuación elegida:", puntuacionSeleccionada);
+    }
+});
+
+// Al final siempre va el DOMContentLoaded
+document.addEventListener('DOMContentLoaded', cargarMenu);
