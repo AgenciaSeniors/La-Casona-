@@ -174,10 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Función para el botón Inicio
 function irAlInicio(btn) {
     // 1. Sube la pantalla al inicio suavemente
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0,behavior: 'smooth'});
 
     // 2. Resetea el buscador si tuviera texto
     const inputBusqueda = document.getElementById('search-input');
@@ -186,6 +183,7 @@ function irAlInicio(btn) {
     // 3. Muestra todos los productos usando tu función filtrar existente
     filtrar('todos', btn);
 }
+document.addEventListener('DOMContentLoaded', cargarMenu);
 
 
 
