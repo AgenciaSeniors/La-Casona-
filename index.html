@@ -77,27 +77,29 @@
     <div class="modal-card">
         <div class="btn-close-modal" onclick="cerrarDetalle()">✕</div>
         
-        <h2 id="det-titulo" class="modal-title">Nombre del Plato</h2>
-
-        <div class="valoracion-clicable" onclick="abrirListaOpiniones()" style="cursor:pointer; display:flex; flex-direction:column; gap:2px; margin: 10px 0;">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span style="color: #888; font-size: 0.8rem;">Valoración:</span>
-                <div style="color: #f1c40f; font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 4px;">
-                    <span>★</span> 
-                    <span id="det-puntuacion-valor">0.0</span>
-                </div>
-            </div>
-            <span style="color: #2ECC71; font-size: 0.7rem; text-decoration: underline;">(Presiona aquí para ver reseñas)</span>
-            <span id="det-cantidad-opiniones" style="font-size: 0.7rem; color: #666;">(0 reseñas)</span>
+        <div class="modal-image-container">
+            <img id="det-img" src="" alt="" class="modal-img">
         </div>
 
-        <img id="det-img" src="" alt="" class="modal-img">
-        <p id="det-desc" class="modal-description">Descripción...</p>
-        
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 15px;">
-            <span id="det-precio" class="modal-price" style="font-size: 1.5rem; font-weight: 800; color: #fff;">$0.00</span>
-            
-            <button class="btn-opinion-small" onclick="abrirOpinionDesdeDetalle()">
+        <div class="modal-info-container">
+            <div class="modal-header-row">
+                <h2 id="det-titulo"></h2>
+                <div id="det-price" class="modal-price-tag"></div>
+            </div>
+
+            <p id="det-desc" class="modal-description"></p>
+
+            <div class="valoracion-box" onclick="abrirListaOpiniones()">
+                <div class="val-main">
+                    <span>Valoración:</span>
+                    <span class="val-stars">★ <span id="det-puntuacion-valor">0.0</span></span>
+                </div>
+                <div class="val-subtext">
+                    (Presiona aquí para ver reseñas) <span id="det-cantidad-opiniones"></span>
+                </div>
+            </div>
+
+            <button class="btn-dejar-opinion-principal" onclick="abrirOpinionDesdeDetalle()">
                 DEJAR OPINIÓN
             </button>
         </div>
@@ -138,6 +140,7 @@
 </body>
 
 </html>
+
 
 
 
