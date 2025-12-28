@@ -196,3 +196,14 @@ async function toggleDestacado(id, valor) {
 
 async function toggleEstado(id, est) {
     await supabaseClient.from('productos').update({ estado: est === 'disponible' ? 'agotado' : 'disponible' }).eq('id', id);
+    cargarAdmin();
+}
+
+async function eliminarProducto(id) {
+    if(confirm("¿Eliminar producto?")) {
+        await supabaseClient.from('productos').update({ activo: false }).eq('id', id);
+        cargarAdmin();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', checkAuth);
