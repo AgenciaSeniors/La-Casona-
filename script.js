@@ -99,22 +99,29 @@ if (lista.length === 0) {
 }
 
 async function abrirDetalle(id) {
-    productoActual = todosLosProductos.find(p => p.id === id);
-    if (!productoActual) return;
+    // 1. Forzamos que el ID sea un número para evitar errores de búsqueda
+    const idNumero = Number(id);
+    productoActual = todosLosProductos.find(p => p.id === idNumero);
+    
+    if (!productoActual) {
+        console.error("No se encontró el producto con ID:", id);
+        return;
+    }
 
-    // 1. Llenar textos básicos
+    // 2. Llenar textos básicos (Corregido 'det-price')
     setText('det-titulo', productoActual.nombre);
     setText('det-desc', productoActual.descripcion);
-    setText('det-precio', `$${productoActual.precio}`);
+    setText('det-price', `$${productoActual.precio}`); // Cambiado det-precio -> det-price
+    
     const imgEl = document.getElementById('det-img');
     if(imgEl) imgEl.src = productoActual.imagen_url || '';
 
-    // 2. BUSCAR RESEÑAS REALES PARA EL PROMEDIO
+    // 3. BUSCAR RESEÑAS REALES PARA EL PROMEDIO
     try {
         const { data: notas, error } = await supabaseClient
             .from('opiniones')
             .select('puntuacion')
-            .eq('producto_id', id);
+            .eq('producto_id', idNumero);
 
         if (error) throw error;
 
@@ -127,7 +134,7 @@ async function abrirDetalle(id) {
             cantidadTotal = notas.length;
         }
 
-        // Actualizamos los IDs de tu valoración clicable
+        // 4. Actualizamos el HTML (Aseguramos que los IDs existan)
         const notaValor = document.getElementById('det-puntuacion-valor');
         const cantidadTexto = document.getElementById('det-cantidad-opiniones');
         
@@ -138,7 +145,7 @@ async function abrirDetalle(id) {
         console.error("Error obteniendo promedio:", err);
     }
 
-    // 3. Mostrar el modal con la animación
+    // 5. Mostrar el modal con la animación
     const modal = document.getElementById('modal-detalle');
     if(modal) {
         modal.style.display = 'flex';
@@ -414,6 +421,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
