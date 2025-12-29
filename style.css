@@ -354,7 +354,7 @@ body.admin-body {
 /* Imita el alto contraste de serifa moderna (Didot/Bodoni) */
 .brand-text h1 {
     /* La fuente Didot (o su similar) es la mejor opción para este estilo */
-    font-family: 'Bodoni Moda', 'Playfair Display', serif;
+    font-family: 'Didot', 'Playfair Display', serif;
     
     color: #2ECC71;
     font-size: 4rem;      /* Un tamaño más imponente */
@@ -499,6 +499,16 @@ body.admin-body {
 }
 /* --- NUEVA PORTADA CON LOGO IMAGEN --- */
 
+.hero-casona {
+    position: relative;
+    height: 35vh; /* Altura de la portada */
+    width: 100%;
+    overflow: hidden;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .hero-bg-cover {
     position: absolute;
@@ -605,18 +615,16 @@ body.admin-body {
     }
 }
 
-/* --- ÚNICO BLOQUE HEADER (Imagen + Centrado + Seguridad) --- */
+/* --- HEADER UNIFICADO (PC y MÓVIL) --- */
 .hero-casona {
     position: relative;
-    height: 40vh;            /* Altura flexible para pantallas grandes */
-    min-height: 320px;       /* ¡ESTO evita que el horario se corte en tu celular! */
+    height: 35vh;
     width: 100%;
-    overflow: hidden;        /* Mantiene la imagen dentro de la caja */
+    overflow: hidden;
     background-color: #000;
-    display: flex;           /* Alinea el logo y las letras al centro */
-    align-items: center;     
-    justify-content: center;
-    border-bottom: 2px solid #2ECC71; /* Tu línea verde de marca */
+    display: flex;
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
 }
 
 /* Fondo Premium con Mayor Claridad */
@@ -641,14 +649,17 @@ body.admin-body {
     z-index: 1;
 }
 
+/* El grupo que contiene logo y letras */
 .brand-group {
-    position: relative;      /* Esto es vital para anclar el logo al texto */
+    position: relative;
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-top: -20px;       /* Ajuste fino para centrar el bloque en el header */
+    /* MODIFICA ESTO: Un valor negativo lo sube. */
+    /* Prueba con -30px o -50px hasta que esté a la altura que te guste */
+    margin-top: -50px;
 }
 
 /* Título Premium Adaptable */
@@ -676,37 +687,29 @@ body.admin-body {
 
 /* EL LOGO SIN FONDO (Anclado al letrero) */
 .logo-unificado {
-    /* Tamaño ajustable pero controlado */
-    width: clamp(120px, 25vw, 280px); 
+    width: clamp(140px, 30vw, 425px); /* Tamaño proporcional */
     height: auto;
     
-    /* POSICIONAMIENTO FIJO RELATIVO AL TEXTO */
-    /* Usamos px en lugar de % para que no varíe entre teléfonos */
-    margin-bottom: -25px;    /* Controla qué tan "encima" del texto está el logo */
-    margin-left: 60px;       /* Controla el desplazamiento lateral exacto */
+    /* CONTROL DE POSICIÓN LIBRE */
+    /* Modifica estos valores para subirlo o moverlo a los lados */
+    margin-bottom: -30%; /* Acerca o aleja el logo del texto 'La CASONA' */
+    margin-left: 40%;   /* Lo mueve a los lados */
     
-    transform: rotate(4.5deg); /* Tu inclinación de diseño */
-    filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
-    pointer-events: none;
+    /* Tu inclinación preferida */
+    transform: rotate(4.5deg); 
+    
+    /* Brillo neón suave */
+    filter: drop-shadow(0 0 12px rgba(46, 204, 113, 0.0));
 }
 
+/* Ajustes finos para pantallas muy pequeñas (Móvil) */
 @media (max-width: 480px) {
-    .hero-casona {
-        min-height: 320px;   /* Evita que se corte el horario */
+    .brand-group {
+        margin-top: 0px;
+        transform: translateY(35px); /* Baja todo el bloque un poco */
     }
-
-    .brand-text h1 {
-        font-size: 2.8rem;   /* Tamaño fijo para el título en móviles */
-    }
-
     .logo-unificado {
-        width: 150px;        /* Tamaño constante en celulares */
-        margin-left: 40px;   /* Posición lateral fija */
-        margin-bottom: -37px;/* Posición vertical fija */
-    }
-
-    .horario-badge {
-        transform: translateY(10px); /* Empuja un poco el horario hacia abajo si es necesario */
+        margin-bottom: -19%; /* En móvil lo pegamos un poco más */
     }
 }
 /* --- ESTILO PIE DE PÁGINA Y BOTÓN ADMIN --- */
@@ -1041,8 +1044,4 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
-
-
-
-
 
