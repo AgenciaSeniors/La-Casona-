@@ -354,7 +354,7 @@ body.admin-body {
 /* Imita el alto contraste de serifa moderna (Didot/Bodoni) */
 .brand-text h1 {
     /* La fuente Didot (o su similar) es la mejor opción para este estilo */
-    font-family: 'Didot', 'Playfair Display', serif;
+    font-family: 'Bodoni Moda', 'Playfair Display', serif;
     
     color: #2ECC71;
     font-size: 4rem;      /* Un tamaño más imponente */
@@ -700,9 +700,9 @@ body.admin-body {
     }
 
     .logo-unificado {
-        width: 110px;        /* Tamaño constante en celulares */
-        margin-left: 50px;   /* Posición lateral fija */
-        margin-bottom: -40px;/* Posición vertical fija */
+        width: 130px;        /* Tamaño constante en celulares */
+        margin-left: 60px;   /* Posición lateral fija */
+        margin-bottom: -35px;/* Posición vertical fija */
     }
 
     .horario-badge {
@@ -804,14 +804,16 @@ footer {
     margin-left: 10px;
 }
 
-/* Contenedor del Scroll */
+/* --- CAMBIO A CUADRÍCULA VERTICAL (2 productos por fila) --- */
 .horizontal-scroll {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 10px 20px;
-    scroll-snap-type: x mandatory; /* Para que las cartas se "ajusten" al deslizar */
-    scrollbar-width: none; /* Oculta scroll en Firefox */
+    display: grid;                  /* Cambiamos flex por grid */
+    grid-template-columns: 1fr 1fr; /* Crea exactamente 2 columnas iguales */
+    gap: 12px;                      /* Espacio entre las tarjetas */
+    padding: 10px 15px;             /* Margen a los lados */
+    
+    /* Quitamos el scroll horizontal que ya no necesitamos */
+    overflow-x: visible; 
+    scroll-snap-type: none; 
 }
 
 .horizontal-scroll::-webkit-scrollbar {
@@ -1039,6 +1041,7 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
+
 
 
 
