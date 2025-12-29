@@ -807,29 +807,30 @@ footer {
     margin-left: 10px;
 }
 
-/* --- DISEÑO VERTICAL 2X2 (Corrección Final) --- */
+/* --- DISEÑO INTELIGENTE: 2 en móvil, más en PC --- */
 .horizontal-scroll {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 columnas iguales siempre */
-    gap: 15px;                      /* Espacio entre platos */
+    /* Esto es la clave: 
+       En el celular hará 2 columnas de mínimo 150px.
+       En PC, si cabe una tercera o cuarta, la pondrá automáticamente. */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+    
+    gap: 15px;
     padding: 15px;
-    overflow: visible;              /* Para que no corte las tarjetas al final */
+    overflow: visible;
 }
 
 .horizontal-scroll::-webkit-scrollbar {
     display: none; /* Oculta scroll en Chrome/Safari */
 }
 .card-casona {
-    width: 100%;           /* Ocupa todo el espacio de su columna */
-    min-width: 0 !important; /* ELIMINA el 170px que las bloqueaba */
-    max-width: none !important;
+    width: 100% !important;   /* Ocupa todo el ancho de su columna */
+    max-width: none !important; /* ELIMINA EL 170px QUE CAUSA EL HUECO */
+    min-width: 0 !important;
     background: #1a1a1a;
     border-radius: 18px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    height: 100%;          /* Para que todas midan lo mismo en la fila */
+    height: 100%;
 }
 
 .card-casona:active {
@@ -1040,5 +1041,6 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
+
 
 
