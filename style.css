@@ -499,16 +499,6 @@ body.admin-body {
 }
 /* --- NUEVA PORTADA CON LOGO IMAGEN --- */
 
-.hero-casona {
-    position: relative;
-    height: 35vh; /* Altura de la portada */
-    width: 100%;
-    overflow: hidden;
-    background-color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .hero-bg-cover {
     position: absolute;
@@ -615,16 +605,18 @@ body.admin-body {
     }
 }
 
-/* --- HEADER UNIFICADO (PC y MÓVIL) --- */
+/* --- ÚNICO BLOQUE HEADER (Imagen + Centrado + Seguridad) --- */
 .hero-casona {
     position: relative;
-    height: 35vh;
+    height: 40vh;            /* Altura flexible para pantallas grandes */
+    min-height: 320px;       /* ¡ESTO evita que el horario se corte en tu celular! */
     width: 100%;
-    overflow: hidden;
+    overflow: hidden;        /* Mantiene la imagen dentro de la caja */
     background-color: #000;
-    display: flex;
-    align-items: center; /* Centrado vertical */
-    justify-content: center; /* Centrado horizontal */
+    display: flex;           /* Alinea el logo y las letras al centro */
+    align-items: center;     
+    justify-content: center;
+    border-bottom: 2px solid #2ECC71; /* Tu línea verde de marca */
 }
 
 /* Fondo Premium con Mayor Claridad */
@@ -649,7 +641,6 @@ body.admin-body {
     z-index: 1;
 }
 
-/* El grupo que contiene logo y letras */
 .brand-group {
     position: relative;
     z-index: 10;
@@ -657,9 +648,8 @@ body.admin-body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    /* MODIFICA ESTO: Un valor negativo lo sube. */
-    /* Prueba con -30px o -50px hasta que esté a la altura que te guste */
-    margin-top: -50px;
+    margin-top: 0;           /* Eliminamos el margen negativo que podía causar solapamientos */
+    padding: 20px;           /* Espacio interno de seguridad */
 }
 
 /* Título Premium Adaptable */
@@ -702,14 +692,29 @@ body.admin-body {
     filter: drop-shadow(0 0 12px rgba(46, 204, 113, 0.0));
 }
 
-/* Ajustes finos para pantallas muy pequeñas (Móvil) */
 @media (max-width: 480px) {
-    .brand-group {
-        margin-top: 0px;
-        transform: translateY(35px); /* Baja todo el bloque un poco */
+    .hero-casona {
+        height: 45vh;        /* En móviles damos un poco más de altura proporcional */
+        min-height: 340px;   /* Aseguramos que quepa el logo + letras + horario */
     }
+
+    .brand-group {
+        transform: none;     /* Eliminamos el empuje hacia abajo que cortaba el horario */
+    }
+
+    .brand-text h1 {
+        font-size: 2.5rem;   /* Ajustamos el tamaño de "La Casona" para que no sea gigante */
+    }
+
     .logo-unificado {
-        margin-bottom: -19%; /* En móvil lo pegamos un poco más */
+        width: 120px;        /* Tamaño fijo y seguro para el logo en móviles */
+        margin-bottom: -15px; 
+        margin-left: 20%;    /* Mantenemos tu estilo de posición pero más controlado */
+    }
+
+    .horario-badge {
+        font-size: 0.75rem;  /* Reducimos un poco la letra del horario para que no se amontone */
+        padding: 4px 12px;
     }
 }
 /* --- ESTILO PIE DE PÁGINA Y BOTÓN ADMIN --- */
@@ -1042,3 +1047,4 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
+
