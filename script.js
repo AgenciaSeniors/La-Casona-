@@ -66,7 +66,7 @@ if (lista.length === 0) {
         'bebidas': { nombre: 'Bebidas', icono: '🍺' },
         'postres': { nombre: 'Postres', icono: '🍨' }, // Sincronizado con admin
         'agregados': { nombre: 'Agregados', icono: '🧀' }
-        'plato especial': { nombre: 'Plato Especial', icono: '🍕' },
+        'plato especial': { nombre: 'Plato Especial', icono: '⭐' },
     };
 
     Object.keys(categorias).forEach(catKey => {
@@ -428,6 +428,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
