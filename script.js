@@ -65,7 +65,7 @@ if (lista.length === 0) {
         'spaguettis': { nombre: 'Spaguettis', icono: '🍝' },
         'bebidas': { nombre: 'Bebidas', icono: '🍺' },
         'postres': { nombre: 'Postres', icono: '🍨' }, // Sincronizado con admin
-        'agregados': { nombre: 'Agregados', icono: '🧀' }
+        'agregados': { nombre: 'Agregados', icono: '🧀' },
         'plato especial': { nombre: 'Plato Especial', icono: '⭐' },
     };
 
@@ -428,6 +428,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
