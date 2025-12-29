@@ -700,9 +700,9 @@ body.admin-body {
     }
 
     .logo-unificado {
-        width: 130px;        /* Tamaño constante en celulares */
-        margin-left: 60px;   /* Posición lateral fija */
-        margin-bottom: -35px;/* Posición vertical fija */
+        width: 150px;        /* Tamaño constante en celulares */
+        margin-left: 40px;   /* Posición lateral fija */
+        margin-bottom: -37px;/* Posición vertical fija */
     }
 
     .horario-badge {
@@ -1041,6 +1041,7 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
+
 
 
 
