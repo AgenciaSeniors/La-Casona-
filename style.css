@@ -642,14 +642,13 @@ body.admin-body {
 }
 
 .brand-group {
-    position: relative;
+    position: relative;      /* Esto es vital para anclar el logo al texto */
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-top: 0;           /* Eliminamos el margen negativo que podía causar solapamientos */
-    padding: 20px;           /* Espacio interno de seguridad */
+    margin-top: -20px;       /* Ajuste fino para centrar el bloque en el header */
 }
 
 /* Título Premium Adaptable */
@@ -677,44 +676,37 @@ body.admin-body {
 
 /* EL LOGO SIN FONDO (Anclado al letrero) */
 .logo-unificado {
-    width: clamp(140px, 30vw, 425px); /* Tamaño proporcional */
+    /* Tamaño ajustable pero controlado */
+    width: clamp(120px, 25vw, 280px); 
     height: auto;
     
-    /* CONTROL DE POSICIÓN LIBRE */
-    /* Modifica estos valores para subirlo o moverlo a los lados */
-    margin-bottom: -30%; /* Acerca o aleja el logo del texto 'La CASONA' */
-    margin-left: 40%;   /* Lo mueve a los lados */
+    /* POSICIONAMIENTO FIJO RELATIVO AL TEXTO */
+    /* Usamos px en lugar de % para que no varíe entre teléfonos */
+    margin-bottom: -25px;    /* Controla qué tan "encima" del texto está el logo */
+    margin-left: 60px;       /* Controla el desplazamiento lateral exacto */
     
-    /* Tu inclinación preferida */
-    transform: rotate(4.5deg); 
-    
-    /* Brillo neón suave */
-    filter: drop-shadow(0 0 12px rgba(46, 204, 113, 0.0));
+    transform: rotate(4.5deg); /* Tu inclinación de diseño */
+    filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
+    pointer-events: none;
 }
 
 @media (max-width: 480px) {
     .hero-casona {
-        height: 45vh;        /* En móviles damos un poco más de altura proporcional */
-        min-height: 340px;   /* Aseguramos que quepa el logo + letras + horario */
-    }
-
-    .brand-group {
-        transform: none;     /* Eliminamos el empuje hacia abajo que cortaba el horario */
+        min-height: 320px;   /* Evita que se corte el horario */
     }
 
     .brand-text h1 {
-        font-size: 2.5rem;   /* Ajustamos el tamaño de "La Casona" para que no sea gigante */
+        font-size: 2.8rem;   /* Tamaño fijo para el título en móviles */
     }
 
     .logo-unificado {
-        width: 120px;        /* Tamaño fijo y seguro para el logo en móviles */
-        margin-bottom: -15px; 
-        margin-left: 20%;    /* Mantenemos tu estilo de posición pero más controlado */
+        width: 110px;        /* Tamaño constante en celulares */
+        margin-left: 50px;   /* Posición lateral fija */
+        margin-bottom: -20px;/* Posición vertical fija */
     }
 
     .horario-badge {
-        font-size: 0.75rem;  /* Reducimos un poco la letra del horario para que no se amontone */
-        padding: 4px 12px;
+        transform: translateY(10px); /* Empuja un poco el horario hacia abajo si es necesario */
     }
 }
 /* --- ESTILO PIE DE PÁGINA Y BOTÓN ADMIN --- */
@@ -1047,4 +1039,5 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
+
 
