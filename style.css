@@ -807,33 +807,29 @@ footer {
     margin-left: 10px;
 }
 
-/* --- CAMBIO A CUADRÍCULA VERTICAL (2 productos por fila) --- */
+/* --- DISEÑO VERTICAL 2X2 (Corrección Final) --- */
 .horizontal-scroll {
-    display: grid;                  /* Cambiamos flex por grid */
-    grid-template-columns: 1fr 1fr; /* Crea exactamente 2 columnas iguales */
-    gap: 12px;                      /* Espacio entre las tarjetas */
-    padding: 10px 15px;             /* Margen a los lados */
-    
-    /* Quitamos el scroll horizontal que ya no necesitamos */
-    overflow-x: visible; 
-    scroll-snap-type: none; 
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columnas iguales siempre */
+    gap: 15px;                      /* Espacio entre platos */
+    padding: 15px;
+    overflow: visible;              /* Para que no corte las tarjetas al final */
 }
 
 .horizontal-scroll::-webkit-scrollbar {
     display: none; /* Oculta scroll en Chrome/Safari */
 }
-
-/* Tarjeta Estilo Casona */
 .card-casona {
-    min-width: 170px;
-    max-width: 170px;
+    width: 100%;           /* Ocupa todo el espacio de su columna */
+    min-width: 0 !important; /* ELIMINA el 170px que las bloqueaba */
+    max-width: none !important;
     background: #1a1a1a;
     border-radius: 18px;
     overflow: hidden;
-    flex-shrink: 0;
-    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: transform 0.3s ease;
+    height: 100%;          /* Para que todas midan lo mismo en la fila */
 }
 
 .card-casona:active {
@@ -1044,4 +1040,5 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
+
 
