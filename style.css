@@ -807,15 +807,12 @@ footer {
     margin-left: 10px;
 }
 
-/* --- DISEÑO INTELIGENTE: 2 en móvil, más en PC --- */
+/* --- 1. DISEÑO DE CUADRÍCULA (2 en móvil, adaptable en PC) --- */
 .horizontal-scroll {
     display: grid;
-    /* Esto es la clave: 
-       En el celular hará 2 columnas de mínimo 150px.
-       En PC, si cabe una tercera o cuarta, la pondrá automáticamente. */
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-    
-    gap: 15px;
+    /* Forzamos 2 columnas en móviles y pantallas pequeñas */
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px;
     padding: 15px;
     overflow: visible;
 }
@@ -823,14 +820,30 @@ footer {
 .horizontal-scroll::-webkit-scrollbar {
     display: none; /* Oculta scroll en Chrome/Safari */
 }
+/* 2. EL BLOQUE QUE ME PREGUNTAS (Solo para PC y tablets) */
+/* Esto evita que en pantallas grandes los 2 platos se estiren feo */
+@media (min-width: 768px) {
+    .horizontal-scroll {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+    }
+}
+/* --- 2. TARJETAS CON PUNTAS OVALADAS (El look que tenías antes) --- */
 .card-casona {
-    width: 100% !important;   /* Ocupa todo el ancho de su columna */
-    max-width: none !important; /* ELIMINA EL 170px QUE CAUSA EL HUECO */
+    width: 100% !important;
     min-width: 0 !important;
+    max-width: none !important;
     background: #1a1a1a;
-    border-radius: 18px;
+    
+    /* Aumentamos el radio para que se vea ovalado y no triangular */
+    border-radius: 28px !important; 
+    
+    /* Muy importante para que la imagen también se reredondee */
+    overflow: hidden !important; 
+    
+    display: flex;
+    flex-direction: column;
     border: 1px solid rgba(255, 255, 255, 0.05);
-    height: 100%;
+    transition: transform 0.3s ease;
 }
 
 .card-casona:active {
@@ -838,8 +851,9 @@ footer {
 }
 
 .card-img-container {
-    height: 130px;
-    position: relative;
+    width: 100%;
+    height: 140px; /* Altura fija para que todas sean iguales */
+    overflow: hidden;
 }
 
 .card-img-container img {
@@ -1041,6 +1055,7 @@ footer {
     border: 2px solid white;
     text-transform: uppercase;
 }
+
 
 
 
