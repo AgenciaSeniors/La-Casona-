@@ -59,7 +59,11 @@ if (lista.length === 0) {
 }
     const categorias = {
         'entrantes': { nombre: 'Entrantes', icono: '🍟' },
-        'completas': { nombre: 'Completas', icono: '🍛' },
+        // Busca esto en la línea 77 de tu script.js y reemplázalo:
+'completas': { 
+    nombre: 'Completas <br><span style="font-size: 0.55em; display: block; font-family: sans-serif; font-weight: normal; opacity: 0.8; margin-top: 5px;">(Todas están disponibles con arroz congrís y arroz frito)</span>', 
+    icono: '🍛' 
+},
         'pizzas': { nombre: 'Pizzas', icono: '🍕' },
         'pizzas familiares': { nombre: 'Pizzas Familiares', icono: '🍕' },
         'spaguettis': { nombre: 'Spaguettis', icono: '🍝' },
@@ -428,6 +432,7 @@ function cerrarListaOpiniones() {
         setTimeout(() => modalLista.style.display = 'none', 300);
     }
 }
+
 
 
 
