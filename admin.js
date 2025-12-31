@@ -218,3 +218,23 @@ document.addEventListener('change', (e) => {
 
 // INICIALIZACIÓN
 document.addEventListener('DOMContentLoaded', checkAuth);
+// BUSCADOR PARA EL PANEL GERENCIAL (admin.js)
+document.getElementById('buscadorInventario').addEventListener('input', function(e) {
+    const textoBusqueda = e.target.value.toLowerCase().trim();
+    
+    // Seleccionamos todos los hijos directos de la lista de inventario
+    const productos = document.getElementById('lista-admin').children;
+
+    Array.from(productos).forEach(producto => {
+        // Obtenemos todo el texto de la tarjeta del producto
+        const contenidoProducto = producto.innerText.toLowerCase();
+        
+        // Si el texto de búsqueda está incluido en la tarjeta, la mostramos
+        if (contenidoProducto.includes(textoBusqueda)) {
+            producto.style.display = ""; // Vuelve a su estado original (flex o block)
+        } else {
+            producto.style.display = "none"; // Se oculta
+        }
+    });
+});
+
